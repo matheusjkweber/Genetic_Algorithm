@@ -18,7 +18,11 @@ public class Parameter{
 	private float mutationRate;
 	private int mutationStep;
 	private float stopCondition;
-	
+	private int n_generations;
+	private double migration_rate;
+	private double migration_chance;
+	private int number_of_populations;
+	private int n_slaves;
 	/**
 	   * Constructor of parameter with value.
 	   * @param modelPopulation The model of population that will be used on this test.
@@ -29,12 +33,17 @@ public class Parameter{
 	   * @param mutationRate The mutation rate that will be used on this test.
 	   * @param mutationStep The mutation step that will be used on this test.
 	   * @param stopCondition The stop condition that will be used on this test.
+	   * @param n_generations The number of generations that regional population will take, only used for RM model.
+	   * @param d The migration rate that regional population will use, only used for RM model.
+	   * @param e The migration chance that regional population will use, only used for RM model.
+	   * @param number_of_populations The number of subpopulations that regional population will use, only used for RM model.
+	   * @param n_slaves The number of slaves that global population will use, only used for GM model.
 	   */
 	
 	public Parameter(ModelPopulationType modelPopulation, int sizeOfPopulation,
 			int elitismRate, SelectionType selection, float crossoverRate,
 			CrossoverType crossoverType, float mutationRate, int mutationStep,
-			float stopCondition) {
+			float stopCondition, int n_generations, double d, double e, int number_of_populations, int n_slaves) {
 		super();
 		this.modelPopulation = modelPopulation;
 		this.sizeOfPopulation = sizeOfPopulation;
@@ -45,8 +54,104 @@ public class Parameter{
 		this.mutationRate = mutationRate;
 		this.mutationStep = mutationStep;
 		this.stopCondition = stopCondition;
+		
+		this.n_generations = n_generations;
+		this.migration_rate = d;
+		this.migration_chance = e;
+		this.number_of_populations = number_of_populations;
+		this.n_slaves = n_slaves;
 	}
 	
+	/**
+	  * This method returns a int.
+	  * @return int The number of generations.
+	  */
+	
+	public int getN_generations() {
+		return n_generations;
+	}
+	
+	/**
+	  * This method set a new value for n_generations.
+	  * @param n_generations The new n_generations for this parameter.
+	  */
+	
+	public void setN_generations(int n_generations) {
+		this.n_generations = n_generations;
+	}
+	
+	/**
+	  * This method returns a float.
+	  * @return double The migration rate.
+	  */
+	
+	public double getMigration_rate() {
+		return migration_rate;
+	}
+	
+	/**
+	  * This method set a new value for migration_rate.
+	  * @param migration_rate The new migration_rate for this parameter.
+	  */
+	
+	public void setMigration_rate(double migration_rate) {
+		this.migration_rate = migration_rate;
+	}
+	
+	/**
+	  * This method returns a float.
+	  * @return double The migration chance.
+	  */
+	
+	public double getMigration_chance() {
+		return migration_chance;
+	}
+	
+	/**
+	  * This method set a new value for migration_chance.
+	  * @param migration_chance The new migration_chance for this parameter.
+	  */
+
+	public void setMigration_chance(double migration_chance) {
+		this.migration_chance = migration_chance;
+	}
+	
+	/**
+	  * This method returns a int.
+	  * @return int The number of populations.
+	  */
+	
+	public int getNumber_of_populations() {
+		return number_of_populations;
+	}
+	
+	/**
+	  * This method set a new value for number_of_populations.
+	  * @param number_of_populations The new number_of_populations for this parameter.
+	  */
+	
+	public void setNumber_of_populations(int number_of_populations) {
+		this.number_of_populations = number_of_populations;
+	}
+	
+	/**
+	  * This method returns a int.
+	  * @return int The number of slaves.
+	  */
+	
+	public int getN_slaves() {
+		return n_slaves;
+	}
+	
+	/**
+	  * This method set a new value for n_slaves.
+	  * @param n_slaves The new n_slaves for this parameter.
+	  */
+	
+	public void setN_slaves(int n_slaves) {
+		this.n_slaves = n_slaves;
+	}
+
 	/**
 	  * This method returns a ModelPopulationType.
 	  * @return ModelPopulationType The type of population.

@@ -73,6 +73,24 @@ public class Global_Population extends Population{
 	public void generatePopulation(){
 		for(int i = 0; i < this.size; i++){
 			population.add(this.create_chromosome());
+		}
+	}
+	
+	/**
+	 * This method will select the best parents from this population based on a specific method and will save on parents.
+	 * @param type The selection type.
+	 * @param selectedChromosomes The number of chromosomes that it have to store.
+	 */
+	
+	public void selectParents(SelectionType type, int selectedChromosomes){
+		if(type == SelectionType.ARM){
+			this.parents = rouletteSelection(population, selectedChromosomes);
+			System.out.println(this.parents);
+		}else if(type == SelectionType.RM){
+			this.parents = rankingSelection(population, selectedChromosomes);
+		}else if(type == SelectionType.TM){
+			this.parents = tournamentSelection(population, selectedChromosomes);
+		}else if(type == SelectionType.USSM){
 			
 		}
 	}

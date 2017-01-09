@@ -6,24 +6,24 @@ import java.util.ArrayList;
 public class Regional_Population extends Population{
 	private ArrayList<ArrayList<Chromosome>> population;
 	private int n_generations;
-	private int migration_rate;
-	private int migration_chance;
+	private double migration_rate;
+	private double migration_chance;
 	private int number_of_populations;
 	
 	/**
 	   * Constructor of global_population with value.
 	   * @param size The size of the population.
 	   * @param n_slave The n_generations that this model is.
-	   * @param migration_rate The migration rate of this population.
-	   * @param migration_chance The chance that migration will happen by generation.
+	   * @param d The migration rate of this population.
+	   * @param e The chance that migration will happen by generation.
 	   * @param number_of_populations The number of subpopulations that this model will use.
 	   */
-	public Regional_Population(int size, int migration_rate, int migration_chance, int number_of_populations) {
+	public Regional_Population(int size, int n_gerenations, double d, double e, int number_of_populations) {
 		super(size);
-		this.n_generations = 0;
-		this.migration_rate = migration_rate;
+		this.n_generations = n_gerenations;
+		this.migration_rate = d;
 		this.number_of_populations = number_of_populations;
-		this.migration_chance = migration_chance;
+		this.migration_chance = e;
 		this.population = new ArrayList<ArrayList<Chromosome>>();
 	}
 
@@ -32,9 +32,9 @@ public class Regional_Population extends Population{
 	  * @return ArrayList<Chromosome> A array of chromosomes.
 	  */
 	
-	public ArrayList<ArrayList<Chromosome>> getPopulation() {
+	/*public ArrayList<ArrayList<Chromosome>> getPopulation() {
 		return population;
-	}
+	}*/
 	
 	/**
 	  * This method set a new population for this object.
@@ -65,19 +65,19 @@ public class Regional_Population extends Population{
 	
 	/**
 	  * This method returns the migration_rate of this population.
-	  * @return Int.
+	  * @return double.
 	  */
 	
-	public int getMigration_rate() {
+	public double getMigration_rate() {
 		return migration_rate;
 	}
 	
 	/**
 	  * This method set a new value for migration_rate.
-	  * @param Int
+	  * @param migration rate
 	  */
 	
-	public void setMigration_rate(int migration_rate) {
+	public void setMigration_rate(double migration_rate) {
 		this.migration_rate = migration_rate;
 	}
 	
@@ -92,7 +92,7 @@ public class Regional_Population extends Population{
 
 	/**
 	  * This method set a new value for number_of_populations.
-	  * @param Int
+	  * @param number_of_populations
 	  */
 	
 	public void setNumber_of_populations(int number_of_populations) {
@@ -101,19 +101,19 @@ public class Regional_Population extends Population{
 	
 	/**
 	  * This method returns the migration_chance of this population.
-	  * @return Int.
+	  * @return double.
 	  */
 	
-	public int getMigration_chance() {
+	public double getMigration_chance() {
 		return migration_chance;
 	}
 
 	/**
 	  * This method set a new value for migration_chance.
-	  * @param Int
+	  * @param migration_chance
 	  */
 	
-	public void setMigration_chance(int migration_chance) {
+	public void setMigration_chance(double migration_chance) {
 		this.migration_chance = migration_chance;
 	}
 	

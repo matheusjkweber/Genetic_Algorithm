@@ -1,6 +1,7 @@
 package Genetic_Algorithm;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
 * The Chromossome class implements the chromossome of GA, fitness function and mutation.
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 * @since   2017-01-07
 */
 
-public class Chromosome {
+public class Chromosome implements Comparable {
 	private ArrayList<Gene> genes; 
 	private float fitness;
 	
@@ -84,25 +85,49 @@ public class Chromosome {
 	 */
 	
 	public void fitnessFunction(){
-		float FC = 0; //fixed cost
-		float VC = 0; //variable cost
+		Gene d = genes.get(0);
+		Gene hg = genes.get(1);
+		Gene l = genes.get(2);
+		Gene q = genes.get(3);
 		
-		// Cf = (D \times \pi) \times L \times p \times \rho_{chapa}
-		FC = (float) (genes.get(0).getValue() * 3.14 * genes.get(1).getValue() * genes.get(2).getValue() * genes.get(3).getValue());
+		Config config = new Config();
 		
-		// CV = (Q \times 1000 \times ( hg + ( Q \div (0,278 \times C \times D ^ {2,63}))^{1,85} \\ \times(L + L_{virtual}))) \div (75 \times n_{global})
+		float weight = (float) ((3.14 * d.getValue()/1000) * config.getP_mass());
+		float speed = (float) ((q.getValue()/1000 * 4)/(3.1415*(Math.pow(d.getValue()/1000, 2))));
+		float fixed_cost = (float) (weight * l.getValue() * config.getP4()); 
+		float anual_fixed_cost = fixed_cost * config.getFRC();
 		
-		float d = (float) Math.pow(genes.get(0).getValue(),2.63); //  D ^ {2,63}
-		d = (float) (0.278 * genes.get(6).getValue() * d); // (0,278 \times C \times D ^ {2,63})
-		d = genes.get(5).getValue() + genes.get(4).getValue() / d; // hg + (Q \div (0,278 \times C \times D ^ {2,63})
-		d = genes.get(4).getValue() * 1000 * d; // (Q \times 1000 \times ( hg + ( Q \div (0,278 \times C \times D ^ {2,63}))^{1,85}
+		// Calculus of AMT
+		float a = q.getValue() / 1000;
+		float b = (float) Math.pow(a / (0.278 * config.getC() * Math.pow(d.getValue() / 1000, 2.63)), 1.85);
+		float c = l.getValue() + ((config.getN1() * d.getValue()) / 1000);
 		
-		float e = genes.get(1).getValue() + genes.get(7).getValue(); // L + L_{virtual}
+		float AMT = hg.getValue() + b  * c;
 		
-		d = d * e; // (Q \times 1000 \times ( hg + ( Q \div (0,278 \times C \times D ^ {2,63}))^{1,85} \\ \times(L + L_{virtual})))
+		float power_CV = (q.getValue() * AMT) / (75 * config.getRend());
+		float power_kW = (float) (power_CV * 0.736);
 		
-		d = d / (75 * genes.get(8).getValue());
+		float kWh_horosazonal = (float) (power_kW * ((config.getN_h()/21) * 12.5)); // 12.5 is the time that normally work in "horosazonal" tariff.
+		float kWh_reservedTime = (float) (power_kW * ((config.getN_h()/21) * 8.5)); // 8.5 is the time that normally work in "reserved time" tariff.
 		
-		fitness = d;
+		float comsumption = (kWh_horosazonal * config.getRev_p1()) + (kWh_reservedTime * config.getRev_p3());
+		float demand = power_kW * config.getRev_p2() * 4;
+		
+		float energy_cost = comsumption + demand;
+		
+		float anual_cost = energy_cost + anual_fixed_cost;
+		
+		fitness = anual_cost;
+		
+		
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		Chromosome c = (Chromosome) o;
+		float compareFitness = c.getFitness();
+		
+		return (int) (this.fitness - compareFitness);
 	}
 }

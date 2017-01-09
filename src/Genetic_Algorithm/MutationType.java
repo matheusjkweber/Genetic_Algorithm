@@ -9,8 +9,9 @@ package Genetic_Algorithm;
 */
 
 // SBS - Vary step by step.
-// SBSD100 - Vary step by step divided 100.
-//SBSD10 - Vary step by step divided 10.
+// SBSD100 - Vary step by step divided by 100.
+//SBSD10 - Vary step by step divided by 10.
+// SBSD3 - Vary step by step divided by 3.
 public enum MutationType {
-	SBS, SBSD100, SBSD10, NONE;
+	SBS, SBSD100, SBSD10, SBSD3, NONE;
 }
