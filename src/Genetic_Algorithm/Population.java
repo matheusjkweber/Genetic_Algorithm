@@ -252,6 +252,84 @@ public abstract class Population {
 		return final_selection;
 	}
 	
+	/**
+	 * This method combine two chromosomes in two new.
+	 * @param chromosome1 The first chromosome.
+	 * @param chromosome2 The second chromosome.
+	 * @param type The crossover type.
+	 * @return ArrayList<Chromosome> The two chromosomes generated.
+	 * */
+	public  ArrayList<Chromosome> crossover(Chromosome chromosome1, Chromosome chromosome2, CrossoverType type){
+		if(type == CrossoverType.P){
+			Gene g1 = chromosome1.getGenes().get(0);
+			Gene g2 = chromosome1.getGenes().get(1);
+			Gene g3 = chromosome2.getGenes().get(2);
+			Gene g4 = chromosome2.getGenes().get(3);
+			
+			ArrayList<Gene> genes = new ArrayList<Gene>();
+			genes.add(g1);
+			genes.add(g2);
+			genes.add(g3);
+			genes.add(g4);
+			
+			Chromosome chromosome3 = new Chromosome(genes);
+			
+			Gene g5 = chromosome2.getGenes().get(0);
+			Gene g6 = chromosome2.getGenes().get(1);
+			Gene g7 = chromosome1.getGenes().get(2);
+			Gene g8 = chromosome1.getGenes().get(3);
+			
+			
+			ArrayList<Gene> genes1 = new ArrayList<Gene>();
+			genes1.add(g5);
+			genes1.add(g6);
+			genes1.add(g7);
+			genes1.add(g8);
+			
+			Chromosome chromosome4 = new Chromosome(genes1);
+			
+			ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>();
+			chromosomes.add(chromosome3);
+			chromosomes.add(chromosome4);
+			
+			return chromosomes;
+		}
+		
+		Gene g1 = chromosome2.getGenes().get(0);
+		Gene g2 = chromosome1.getGenes().get(1);
+		Gene g3 = chromosome1.getGenes().get(2);
+		Gene g4 = chromosome2.getGenes().get(3);
+		
+		ArrayList<Gene> genes = new ArrayList<Gene>();
+		genes.add(g1);
+		genes.add(g2);
+		genes.add(g3);
+		genes.add(g4);
+		
+		Chromosome chromosome3 = new Chromosome(genes);
+		
+		Gene g5 = chromosome1.getGenes().get(0);
+		Gene g6 = chromosome2.getGenes().get(1);
+		Gene g7 = chromosome2.getGenes().get(2);
+		Gene g8 = chromosome1.getGenes().get(3);
+		
+		
+		ArrayList<Gene> genes1 = new ArrayList<Gene>();
+		genes1.add(g5);
+		genes1.add(g6);
+		genes1.add(g7);
+		genes1.add(g8);
+		
+		Chromosome chromosome4 = new Chromosome(genes1);
+		
+		ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>();
+		chromosomes.add(chromosome3);
+		chromosomes.add(chromosome4);
+		
+		return chromosomes;
+		
+	}
+	
 	public ArrayList<Chromosome> getPopulation(){
 		return null;
 	}

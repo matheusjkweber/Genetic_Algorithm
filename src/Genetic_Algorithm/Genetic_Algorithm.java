@@ -24,7 +24,7 @@ public class Genetic_Algorithm {
 		
 		Parameter p = new Parameter(ModelPopulationType.GM, 100,
 				10, SelectionType.ARM, 85,
-				CrossoverType.MP, (float) 0.5, 10,
+				CrossoverType.P, (float) 0.5, 10,
 				10, random.nextInt(20) + 1, random.nextFloat() * (20 - 0.1) + 0.1, random.nextFloat() * (10 - 0.1) + 0.1, random.nextInt(4) + 1, random.nextInt(3) + 1);
 		
 		parameters.add(p);
@@ -41,9 +41,11 @@ public class Genetic_Algorithm {
 				population.selectParents(p.getSelection(), 4);
 				
 				ArrayList<Chromosome> test = population.getPopulation();
-				Collections.sort(test);
-				System.out.println(test);
-				System.out.println(population.getParents());
+				
+				Chromosome chromosome1 = test.get(0);
+				
+				chromosome1.mutate(100, 100);
+				
 				
 			}else if(p.getModelPopulation() == ModelPopulationType.LM){
 				population = new Local_Population(p.getSizeOfPopulation());

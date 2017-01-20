@@ -2,6 +2,7 @@ package Genetic_Algorithm;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 /**
 * The Chromossome class implements the chromossome of GA, fitness function and mutation.
@@ -118,7 +119,24 @@ public class Chromosome implements Comparable {
 		float anual_cost = energy_cost + anual_fixed_cost;
 		
 		fitness = anual_cost;
+	}
+	
+	/**
+	 * This method iterrate all genes, and randomly mutate one.
+	 * @mutate_rate The rate that mutation can happen.
+	 * @step The step that mutation will happen.
+	 */
+	
+	public void mutate(int mutate_rate, int step){
+		Random random = new Random();
 		
+		
+		for(int i = 0; i < genes.size(); i++){
+			int r = random.nextInt(100) + 1;
+			if(r < mutate_rate){
+				genes.get(i).mutate(step);
+			}
+		}
 		
 	}
 

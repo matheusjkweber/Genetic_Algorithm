@@ -9,5 +9,5 @@ package Genetic_Algorithm;
 */
 
 public enum CrossoverType {
-	P, PP, MP;
+	P, PP;
 }

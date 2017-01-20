@@ -1,5 +1,7 @@
 package Genetic_Algorithm;
 
+import java.util.Random;
+
 /**
 	* The Gene class implements the all the parameters necessary to create a new gene.
 	*
@@ -101,6 +103,36 @@ public class Gene {
 	
 	public void setMutation(MutationType mutation) {
 		this.mutation = mutation;
+	}
+	
+	/**
+	 * This method mutation a gene based on MutantionType.
+	 * @param step The step that mutation will have.
+	 */
+	public void mutate(int step){
+		if(mutation == MutationType.SBSD3){
+			step = step / 3;
+		}
+		
+		Random random = new Random();
+		
+		// Random the step.
+		int r1 = random.nextInt(step) + 1;
+		step = r1;
+		
+		int r = random.nextInt(2) + 1;
+		
+		// Random if is positive or negative.
+		if(r == 1){
+			step = step * -1;
+		}
+		
+		float final_value = value + step;
+		
+		// Only change if final value is positive.
+		if(final_value > 0){
+			value = final_value;
+		}
 	}
 	
 	@Override
