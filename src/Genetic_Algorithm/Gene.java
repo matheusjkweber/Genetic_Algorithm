@@ -15,6 +15,8 @@ public class Gene {
 	private float value;
 	private boolean mutate;
 	private MutationType mutation;
+	private int min;
+	private int max;
 	
 	/**
 	   * Constructor of gene with value.
@@ -25,12 +27,14 @@ public class Gene {
 	   */
 	
 	public Gene(String label, float value, boolean mutate,
-			MutationType mutation) {
+			MutationType mutation, int min, int max) {
 		super();
 		this.label = label;
 		this.value = value;
 		this.mutate = mutate;
 		this.mutation = mutation;
+		this.min = min;
+		this.max = max;
 	}
 	
 	/**
@@ -105,6 +109,24 @@ public class Gene {
 		this.mutation = mutation;
 	}
 	
+	
+	
+	public int getMin() {
+		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
+	}
+
 	/**
 	 * This method mutation a gene based on MutantionType.
 	 * @param step The step that mutation will have.
@@ -132,6 +154,15 @@ public class Gene {
 		// Only change if final value is positive.
 		if(final_value > 0){
 			value = final_value;
+		}
+		
+		// Verify if it is between minimum and maximum allowed.
+		if(value < min){
+			value = min;
+		}
+		
+		if(value > max){
+			value = max;
 		}
 	}
 	

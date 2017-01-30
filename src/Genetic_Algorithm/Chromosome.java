@@ -15,6 +15,7 @@ import java.util.Random;
 public class Chromosome implements Comparable {
 	private ArrayList<Gene> genes; 
 	private float fitness;
+	private float fitness2;
 	
 	/**
 	   * Constructor of gene with value.
@@ -63,6 +64,15 @@ public class Chromosome implements Comparable {
 		this.fitness = fitness;
 	}
 	
+	
+	public float getFitness2() {
+		return fitness2;
+	}
+
+	public void setFitness2(float fitness2) {
+		this.fitness2 = fitness2;
+	}
+
 	/**
 	  * This method returns a String describing the chromosome.
 	  * @return String The description of this chromosome.
@@ -70,7 +80,8 @@ public class Chromosome implements Comparable {
 	
 	@Override
 	public String toString() {
-		return "Chromosome [Fitness=" + fitness + "]";
+		return "Chromosome [Fitness=" + fitness + ", D = "+genes.get(0).getValue()+", hg = "+genes.get(1).getValue()+", L = "+
+	genes.get(2).getValue()+", Q = "+genes.get(3).getValue()+"]";
 	}
 	
 	/**
@@ -127,17 +138,10 @@ public class Chromosome implements Comparable {
 	 * @step The step that mutation will happen.
 	 */
 	
-	public void mutate(int mutate_rate, int step){
-		Random random = new Random();
-		
-		
+	public void mutate(int step){
 		for(int i = 0; i < genes.size(); i++){
-			int r = random.nextInt(100) + 1;
-			if(r < mutate_rate){
-				genes.get(i).mutate(step);
-			}
+			genes.get(i).mutate(step);
 		}
-		
 	}
 
 	@Override

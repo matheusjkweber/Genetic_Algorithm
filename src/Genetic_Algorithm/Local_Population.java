@@ -1,9 +1,10 @@
 package Genetic_Algorithm;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
-public class Local_Population extends Population{
+public class Local_Population extends Population implements Runnable{
 	private ArrayList<Chromosome> population;
 	
 	/**
@@ -12,8 +13,8 @@ public class Local_Population extends Population{
 	   * @param n_slave The number of threads that this population will use as slaves.
 	   
 	   */
-	public Local_Population(int size) {
-		super(size);
+	public Local_Population(int size, int elitism_rate, Parameter parameters) {
+		super(size, elitism_rate, parameters);
 		this.population = new ArrayList<Chromosome>();
 	}
 	
@@ -40,11 +41,116 @@ public class Local_Population extends Population{
 	 * If not first time, this method will also include the best parents from the previous generation.
 	 */
 	
-	public void generatePopulation(){
-		for(int i = 0; i < this.size; i++){
-			population.add(this.create_chromosome());
+	public void generatePopulation(boolean first_time){
+		if(first_time == true){
+			for(int i = 0; i < this.size; i++){
+				population.add(this.create_chromosome());
+				if(population.get(i).getFitness() > this.bigger_fitness){
+					this.bigger_fitness = population.get(i).getFitness();
+				}
+			}
+		}else{
+			// Regenerate the population.
+			// Apply elitism.
+			float proportion = ((float) elitism_rate) / ((float) size);
+			proportion = proportion * 100;
+			
+			// Select parents to elitism.
+			selectParents(population, SelectionType.RM, (int) proportion);
+			
+			ArrayList<Chromosome> new_population = new ArrayList<Chromosome>();
+			new_population = this.parents;
+			
+			selectParents(population, SelectionType.RM, population.size());
+			
+			ArrayList<Chromosome> cross_population = this.parents;
+			
+			for(int i = 0; i < proportion; i++){
+				if(i >= cross_population.size()){
+					break;
+				}
+				cross_population.remove(i);
+			}
+			
+			
+			// Apply crossover and get the rest applying mutation if need.
+			selectParents(cross_population, parameters.getSelection(), size - (int) proportion);
+			
+			for(int i = 0; i < parents.size() - 1; i = i+2){
+				Chromosome c1 = parents.get(i);
+				Chromosome c2 = parents.get(i+1);
+				
+				ArrayList<Chromosome> c3 = crossover(c1, c2, parameters.getCrossoverType());
+				
+				// Apply mutation if drawn.
+				Random random = new Random();
+				int r = random.nextInt(100) + 0;
+				
+				if(r < parameters.getMutationRate()){
+					c3.get(0).mutate();
+				}
+				
+				r = random.nextInt(100) + 0;
+				
+				if(r < parameters.getMutationRate()){
+					c3.get(1).mutate();
+				}
+				
+				new_population.add(c3.get(0));
+				new_population.add(c3.get(1));
+			}
+						
+			population = new_population;
+		}
+	}
+	
+	public Chromosome train(){
+		boolean stop = false;
+		int iterations = 0;
+		int unchangedLastSelected = 0;
+		// Genetic algorithm loop.
+		while(stop == false){
+			iterations++;
+			// Create first population or repopulate and calculate the fitness.
+			if(population.size() == 0){
+				generatePopulation(true);
+			}else{
+				// Select parents, apply crossover, apply mutation and create a new population.
+				generatePopulation(false);
+			}
+			// Get the best chromosome.
+			selectParents(population, SelectionType.RM, 1);
+			
+			// Increase unachanged flag.
+			if(last_selected != null){
+				if(last_selected.getFitness() <= parents.get(0).getFitness()){
+					unchangedLastSelected++;
+				}
+			}
+			
+			// If reach the maximum iterations number, stop.
+			if(this.maximum_iterations == iterations){
+				stop = true;
+			}
+			
+			// Save the best.
+			last_selected = parents.get(0);
+			
+			float proportion = (int)(this.maximum_iterations*(parameters.getStopCondition()/100.0f));
+			
+			// If reach the maximum unchanged chromosome allowed, stop.
+			if(unchangedLastSelected > proportion){
+				stop = true;
+			}
 			
 		}
+		return last_selected;
+		
+	}
+
+	@Override
+	public void run() {
+		train();
 	}
 	
 }

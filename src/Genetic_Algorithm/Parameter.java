@@ -1,5 +1,7 @@
 package Genetic_Algorithm;
 
+import java.util.ArrayList;
+
 /**
 * The Parameter class implements the parameters that can be used on test.
 *
@@ -18,9 +20,10 @@ public class Parameter{
 	private float mutationRate;
 	private int mutationStep;
 	private float stopCondition;
+	private int maximumIterations;
 	private int n_generations;
 	private double migration_rate;
-	private double migration_chance;
+	private int migration_tax;
 	private int number_of_populations;
 	private int n_slaves;
 	/**
@@ -43,7 +46,7 @@ public class Parameter{
 	public Parameter(ModelPopulationType modelPopulation, int sizeOfPopulation,
 			int elitismRate, SelectionType selection, float crossoverRate,
 			CrossoverType crossoverType, float mutationRate, int mutationStep,
-			float stopCondition, int n_generations, double d, double e, int number_of_populations, int n_slaves) {
+			float stopCondition, int maximumIterations, int n_generations, double d, double e, int number_of_populations, int n_slaves) {
 		super();
 		this.modelPopulation = modelPopulation;
 		this.sizeOfPopulation = sizeOfPopulation;
@@ -54,13 +57,48 @@ public class Parameter{
 		this.mutationRate = mutationRate;
 		this.mutationStep = mutationStep;
 		this.stopCondition = stopCondition;
+		this.maximumIterations = maximumIterations;
 		
 		this.n_generations = n_generations;
 		this.migration_rate = d;
-		this.migration_chance = e;
+		//this.migration_chance = e;
 		this.number_of_populations = number_of_populations;
 		this.n_slaves = n_slaves;
 	}
+	
+	
+	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation,
+			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep){
+		super();
+		this.maximumIterations = numberIterations;
+		this.stopCondition = stopCondition;
+		this.sizeOfPopulation = sizeOfPopulation;
+		this.elitismRate = elitismRate;
+		this.crossoverRate = crossoverRate;
+		this.crossoverType = crossoverType;
+		this.mutationRate = mutationRate;
+		this.mutationStep = mutationStep;
+		this.modelPopulation = modelPopulation;
+	}
+	
+	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation, 
+			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep,
+			double migration_rate, int migration_tax, int numberOfPopulations){
+		super();
+		this.maximumIterations = numberIterations;
+		this.stopCondition = stopCondition;
+		this.sizeOfPopulation = sizeOfPopulation;
+		this.elitismRate = elitismRate;
+		this.crossoverRate = crossoverRate;
+		this.crossoverType = crossoverType;
+		this.mutationRate = mutationRate;
+		this.mutationStep = mutationStep;
+		this.modelPopulation = modelPopulation;
+		this.migration_rate = migration_rate;
+		this.number_of_populations = numberOfPopulations;
+		this.migration_tax = migration_tax;
+	}
+	
 	
 	/**
 	  * This method returns a int.
@@ -96,24 +134,6 @@ public class Parameter{
 	
 	public void setMigration_rate(double migration_rate) {
 		this.migration_rate = migration_rate;
-	}
-	
-	/**
-	  * This method returns a float.
-	  * @return double The migration chance.
-	  */
-	
-	public double getMigration_chance() {
-		return migration_chance;
-	}
-	
-	/**
-	  * This method set a new value for migration_chance.
-	  * @param migration_chance The new migration_chance for this parameter.
-	  */
-
-	public void setMigration_chance(double migration_chance) {
-		this.migration_chance = migration_chance;
 	}
 	
 	/**
@@ -314,7 +334,106 @@ public class Parameter{
 		this.stopCondition = stopCondition;
 	}
 
+
+	public int getMaximumIterations() {
+		return maximumIterations;
+	}
+
+	public void setMaximumIterations(int maximumIterations) {
+		this.maximumIterations = maximumIterations;
+	}
+
+
+	public int getMigration_tax() {
+		return migration_tax;
+	}
+
+
+	public void setMigration_tax(int migration_tax) {
+		this.migration_tax = migration_tax;
+	}
 	
+	public static ArrayList<Parameter> generateLocalTests(){
+		int[] number_iterations = {100, 1000, 10000, 100000};
+		int[] size_of_population = {100, 500, 1000, 5000, 10000};
+		int[] stopCondition = {1,5,10,15,20};
+		int[] elitismRate = {10,20,70};
+		int[] crossoverRate = {85,50,25};
+		double[] mutationRate = {0.5,1.0,5.0};
+		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		
+		for(int i = 0; i < number_iterations.length; i++){
+			int number = number_iterations[i];
+			for(int j = 0; j < size_of_population.length; j++){
+				int size = size_of_population[j];
+				for(int z = 0; z < stopCondition.length; z++){
+					int stop = stopCondition[z];
+					for(int p = 0; p < elitismRate.length; p++){
+						int elitism = elitismRate[p];
+						for(int v = 0; v < crossoverRate.length; v++){
+							int cross = crossoverRate[v];
+							for(int b = 0; b < mutationRate.length; b++){
+								float mutation = (float) mutationRate[b];
+								Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10);
+								parameters.add(p2);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return parameters;
+	}
+	
+	
+	public static ArrayList<Parameter> generateRegionalTests(){
+		int[] number_iterations = {100, 1000, 10000, 100000};
+		int[] size_of_population = {100, 500, 1000, 5000, 10000};
+		int[] stopCondition = {1,5,10,15,20};
+		int[] elitismRate = {10,20,70};
+		int[] crossoverRate = {85,50,25};
+		double[] mutationRate = {0.5,1.0,5.0};
+		int[] migrationRate = {10,20,40};
+		int[] migrationTax = {10,20,40};
+		int[] numberOfPopulations = {2,4,8,16};
+		
+		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		
+		for(int i = 0; i < number_iterations.length; i++){
+			int number = number_iterations[i];
+			for(int j = 0; j < size_of_population.length; j++){
+				int size = size_of_population[j];
+				for(int z = 0; z < stopCondition.length; z++){
+					int stop = stopCondition[z];
+					for(int p = 0; p < elitismRate.length; p++){
+						int elitism = elitismRate[p];
+						for(int v = 0; v < crossoverRate.length; v++){
+							int cross = crossoverRate[v];
+							for(int b = 0; b < mutationRate.length; b++){
+								float mutation = (float) mutationRate[b];
+								for(int a = 0; a < migrationRate.length; a++){
+									int migrationR = migrationRate[a];
+									for(int q = 0; q < migrationTax.length;q++){
+										int migrationT = migrationTax[q];
+										for(int l = 0; l < numberOfPopulations.length; l++){
+											int numberP = numberOfPopulations[l];
+											Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
+													migrationR, migrationT, numberP);
+											parameters.add(p2);
+										}
+									}
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return parameters;
+	}
 	
 	
 }
