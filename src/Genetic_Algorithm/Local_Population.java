@@ -10,11 +10,11 @@ public class Local_Population extends Population implements Runnable{
 	/**
 	   * Constructor of global_population with value.
 	   * @param size The size of the population.
-	   * @param n_slave The number of threads that this population will use as slaves.
-	   
+	   * @param parameters The parameters of this population.
 	   */
-	public Local_Population(int size, int elitism_rate, Parameter parameters) {
-		super(size, elitism_rate, parameters);
+	
+	public Local_Population(Parameter parameters) {
+		super(parameters);
 		this.population = new ArrayList<Chromosome>();
 	}
 	
@@ -39,6 +39,7 @@ public class Local_Population extends Population implements Runnable{
 	/**
 	 * If first time, this method will randomly generate a new population for the Genetic Algorithm.
 	 * If not first time, this method will also include the best parents from the previous generation.
+	 * @param boolean If is first time = true, if not = false.
 	 */
 	
 	public void generatePopulation(boolean first_time){
@@ -104,6 +105,10 @@ public class Local_Population extends Population implements Runnable{
 		}
 	}
 	
+	/**
+	 * This method train the population and returns the best chromosome found.
+	 * @return Chromosome.
+	 */
 	public Chromosome train(){
 		boolean stop = false;
 		int iterations = 0;
@@ -122,7 +127,7 @@ public class Local_Population extends Population implements Runnable{
 			selectParents(population, SelectionType.RM, 1);
 			
 			// Increase unachanged flag.
-			if(last_selected != null){
+			if(last_selected != null && parents.size() > 0){
 				if(last_selected.getFitness() <= parents.get(0).getFitness()){
 					unchangedLastSelected++;
 				}
@@ -134,8 +139,10 @@ public class Local_Population extends Population implements Runnable{
 			}
 			
 			// Save the best.
-			last_selected = parents.get(0);
-			
+			if(parents.size() > 0){
+				last_selected = parents.get(0);
+			}
+
 			float proportion = (int)(this.maximum_iterations*(parameters.getStopCondition()/100.0f));
 			
 			// If reach the maximum unchanged chromosome allowed, stop.

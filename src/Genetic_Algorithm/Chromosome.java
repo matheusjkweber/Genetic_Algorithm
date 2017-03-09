@@ -13,9 +13,9 @@ import java.util.Random;
 */
 
 public class Chromosome implements Comparable {
-	private ArrayList<Gene> genes; 
-	private float fitness;
-	private float fitness2;
+	private ArrayList<Gene> genes;  // Genes of the chromosome.
+	private float fitness; // Fitness of the chromossome.
+	private float fitness2; // Inverted fitness, used to compare chromosomes.
 	
 	/**
 	   * Constructor of gene with value.
@@ -56,7 +56,7 @@ public class Chromosome implements Comparable {
 	}
 	
 	/**
-	  * This method set a new fitness for this cromosome.
+	  * This method set a new fitness for this chromosome.
 	  * @param Float The new value for fitness.
 	  */
 	
@@ -82,14 +82,6 @@ public class Chromosome implements Comparable {
 	public String toString() {
 		return "Chromosome [Fitness=" + fitness + ", D = "+genes.get(0).getValue()+", hg = "+genes.get(1).getValue()+", L = "+
 	genes.get(2).getValue()+", Q = "+genes.get(3).getValue()+"]";
-	}
-	
-	/**
-	 * This method iterate the list of genes mutating each one based on its MutationType.
-	 */
-	
-	public void mutate(){
-		
 	}
 	
 	/**
@@ -133,18 +125,20 @@ public class Chromosome implements Comparable {
 	}
 	
 	/**
-	 * This method iterrate all genes, and randomly mutate one.
-	 * @mutate_rate The rate that mutation can happen.
+	 * This method iterate all genes, and randomly mutate one.
 	 * @step The step that mutation will happen.
 	 */
 	
-	public void mutate(int step){
+	public void mutate(){
 		for(int i = 0; i < genes.size(); i++){
-			genes.get(i).mutate(step);
+			genes.get(i).mutate();
 		}
 	}
 
 	@Override
+	/**
+	 * This method is used within Comparable to compare two chromosome.
+	 */
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
 		Chromosome c = (Chromosome) o;

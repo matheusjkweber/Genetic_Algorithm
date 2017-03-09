@@ -21,32 +21,35 @@ public class Parameter{
 	private int mutationStep;
 	private float stopCondition;
 	private int maximumIterations;
-	private int n_generations;
-	private double migration_rate;
-	private int migration_tax;
-	private int number_of_populations;
-	private int n_slaves;
+	private int nGenerations;
+	private double migrationRate;
+	private int migrationTax;
+	private int numberOfPopulations;
+	private int nSlaves;
+	
 	/**
 	   * Constructor of parameter with value.
 	   * @param modelPopulation The model of population that will be used on this test.
 	   * @param sizeOfPopulation The size of population that will be used on this test.
 	   * @param elitismRate The elitism rate that will be used on this test.
+	   * @param selection The type of selection that will be used on this test.
 	   * @param crossoverRate The crossover rate that will be used on this test.
 	   * @param crossoverType The crossover type that will be used on this test.
 	   * @param mutationRate The mutation rate that will be used on this test.
 	   * @param mutationStep The mutation step that will be used on this test.
 	   * @param stopCondition The stop condition that will be used on this test.
-	   * @param n_generations The number of generations that regional population will take, only used for RM model.
-	   * @param d The migration rate that regional population will use, only used for RM model.
-	   * @param e The migration chance that regional population will use, only used for RM model.
-	   * @param number_of_populations The number of subpopulations that regional population will use, only used for RM model.
-	   * @param n_slaves The number of slaves that global population will use, only used for GM model.
+	   * @param maximumIterations The maximum iterations that will be used on this test.
+	   * @param nGenerations The number of generations that regional population will take, only used for RM model.
+	   * @param migrationRate The migration rate that regional population will use, only used for RM model.
+	   * @param migrationChance The migration chance that regional population will use, only used for RM model.
+	   * @param numberOfPopulations The number of subpopulations that regional population will use, only used for RM model.
+	   * @param nSlaves The number of slaves that global population will use, only used for GM model.
 	   */
 	
 	public Parameter(ModelPopulationType modelPopulation, int sizeOfPopulation,
 			int elitismRate, SelectionType selection, float crossoverRate,
 			CrossoverType crossoverType, float mutationRate, int mutationStep,
-			float stopCondition, int maximumIterations, int n_generations, double d, double e, int number_of_populations, int n_slaves) {
+			float stopCondition, int maximumIterations, int nGenerations, double migrationRate, double migrationChance, int numberOfPopulations, int nSlaves) {
 		super();
 		this.modelPopulation = modelPopulation;
 		this.sizeOfPopulation = sizeOfPopulation;
@@ -59,13 +62,25 @@ public class Parameter{
 		this.stopCondition = stopCondition;
 		this.maximumIterations = maximumIterations;
 		
-		this.n_generations = n_generations;
-		this.migration_rate = d;
+		this.nGenerations = nGenerations;
+		this.migrationRate = migrationRate;
 		//this.migration_chance = e;
-		this.number_of_populations = number_of_populations;
-		this.n_slaves = n_slaves;
+		this.numberOfPopulations = numberOfPopulations;
+		this.nSlaves = nSlaves;
 	}
 	
+	/**
+	   * Constructor of parameter with value.
+	   * @param modelPopulation The model of population that will be used on this test.
+	   * @param numberIterations The maximum number of iterations that will be used on this test.
+	   * @param stopCondition The stop condition that will be used on this test.
+	   * @param sizeOfPopulation The size of population that will be used on this test.
+	   * @param elitismRate The elitism rate that will be used on this test.
+	   * @param crossoverRate The crossover rate that will be used on this test.
+	   * @param crossoverType The crossover type that will be used on this test.
+	   * @param mutationRate The mutation rate that will be used on this test.
+	   * @param mutationStep The mutation step that will be used on this test.
+	   */
 	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation,
 			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep){
@@ -81,9 +96,25 @@ public class Parameter{
 		this.modelPopulation = modelPopulation;
 	}
 	
+	/**
+	   * Constructor of parameter with value.
+	   * @param modelPopulation The model of population that will be used on this test.
+	   * @param numberIterations The maximum number of iterations that will be used on this test.
+	   * @param stopCondition The stop condition that will be used on this test.
+	   * @param sizeOfPopulation The size of population that will be used on this test.
+	   * @param elitismRate The elitism rate that will be used on this test.
+	   * @param crossoverRate The crossover rate that will be used on this test.
+	   * @param crossoverType The crossover type that will be used on this test.
+	   * @param mutationRate The mutation rate that will be used on this test.
+	   * @param mutationStep The mutation step that will be used on this test.
+	   * @param migrationRate The migration rate that regional population will use, only used for RM model.
+	   * @param migrationTax The migration tax that regional population will use, only used for RM model.
+	   * @param numberOfPopulations The number of subpopulations that regional population will use, only used for RM model.
+	   */
+	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation, 
 			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep,
-			double migration_rate, int migration_tax, int numberOfPopulations){
+			double migrationRate, int migrationTax, int numberOfPopulations){
 		super();
 		this.maximumIterations = numberIterations;
 		this.stopCondition = stopCondition;
@@ -94,9 +125,9 @@ public class Parameter{
 		this.mutationRate = mutationRate;
 		this.mutationStep = mutationStep;
 		this.modelPopulation = modelPopulation;
-		this.migration_rate = migration_rate;
-		this.number_of_populations = numberOfPopulations;
-		this.migration_tax = migration_tax;
+		this.migrationRate = migrationRate;
+		this.numberOfPopulations = numberOfPopulations;
+		this.migrationTax = migrationTax;
 	}
 	
 	
@@ -105,8 +136,8 @@ public class Parameter{
 	  * @return int The number of generations.
 	  */
 	
-	public int getN_generations() {
-		return n_generations;
+	public int getNGenerations() {
+		return nGenerations;
 	}
 	
 	/**
@@ -114,8 +145,8 @@ public class Parameter{
 	  * @param n_generations The new n_generations for this parameter.
 	  */
 	
-	public void setN_generations(int n_generations) {
-		this.n_generations = n_generations;
+	public void setNGenerations(int nGenerations) {
+		this.nGenerations = nGenerations;
 	}
 	
 	/**
@@ -123,8 +154,8 @@ public class Parameter{
 	  * @return double The migration rate.
 	  */
 	
-	public double getMigration_rate() {
-		return migration_rate;
+	public double getMigrationRate() {
+		return migrationRate;
 	}
 	
 	/**
@@ -132,8 +163,8 @@ public class Parameter{
 	  * @param migration_rate The new migration_rate for this parameter.
 	  */
 	
-	public void setMigration_rate(double migration_rate) {
-		this.migration_rate = migration_rate;
+	public void setMigrationRate(double migrationRate) {
+		this.migrationRate = migrationRate;
 	}
 	
 	/**
@@ -141,8 +172,8 @@ public class Parameter{
 	  * @return int The number of populations.
 	  */
 	
-	public int getNumber_of_populations() {
-		return number_of_populations;
+	public int getNumberOfPopulations() {
+		return numberOfPopulations;
 	}
 	
 	/**
@@ -150,8 +181,8 @@ public class Parameter{
 	  * @param number_of_populations The new number_of_populations for this parameter.
 	  */
 	
-	public void setNumber_of_populations(int number_of_populations) {
-		this.number_of_populations = number_of_populations;
+	public void setNumberOfPopulations(int numberOfPopulations) {
+		this.numberOfPopulations = numberOfPopulations;
 	}
 	
 	/**
@@ -159,8 +190,8 @@ public class Parameter{
 	  * @return int The number of slaves.
 	  */
 	
-	public int getN_slaves() {
-		return n_slaves;
+	public int getNSlaves() {
+		return nSlaves;
 	}
 	
 	/**
@@ -168,8 +199,8 @@ public class Parameter{
 	  * @param n_slaves The new n_slaves for this parameter.
 	  */
 	
-	public void setN_slaves(int n_slaves) {
-		this.n_slaves = n_slaves;
+	public void setNSlaves(int nSlaves) {
+		this.nSlaves = nSlaves;
 	}
 
 	/**
@@ -334,30 +365,52 @@ public class Parameter{
 		this.stopCondition = stopCondition;
 	}
 
-
+	/**
+	  * This method returns a int.
+	  * @return int The maximumIterations of the parameter.
+	  */
+	
 	public int getMaximumIterations() {
 		return maximumIterations;
 	}
-
+	
+	/**
+	  * This method set a new value for maximumIterations.
+	  * @param int The new maximumIterations for this parameter.
+	  */
+	
 	public void setMaximumIterations(int maximumIterations) {
 		this.maximumIterations = maximumIterations;
 	}
 
-
-	public int getMigration_tax() {
-		return migration_tax;
+	/**
+	  * This method returns a int.
+	  * @return int The migrationTax of the parameter.
+	  */
+	
+	public int getMigrationTax() {
+		return migrationTax;
 	}
 
-
-	public void setMigration_tax(int migration_tax) {
-		this.migration_tax = migration_tax;
+	/**
+	  * This method set a new value for stopCondition.
+	  * @param float The new stopCondition for this parameter.
+	  */
+	
+	public void setMigration_tax(int migrationTax) {
+		this.migrationTax = migrationTax;
 	}
 	
+	/**
+	 * This method generate a list of tests.
+	 * @return ArrayList<Parameter>
+	 */
+	
 	public static ArrayList<Parameter> generateLocalTests(){
-		int[] number_iterations = {100, 1000, 10000, 100000};
-		int[] size_of_population = {100, 500, 1000, 5000, 10000};
-		int[] stopCondition = {1,5,10,15,20};
-		int[] elitismRate = {10,20,70};
+		int[] number_iterations = {100, 1000, 10000};
+		int[] size_of_population = {100, 500};
+		int[] stopCondition = {1,5,10,15};
+		int[] elitismRate = {5,10,15};
 		int[] crossoverRate = {85,50,25};
 		double[] mutationRate = {0.5,1.0,5.0};
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
@@ -386,12 +439,16 @@ public class Parameter{
 		return parameters;
 	}
 	
+	/**
+	 * This method generate a list of tests.
+	 * @return ArrayList<Parameter>
+	 */
 	
 	public static ArrayList<Parameter> generateRegionalTests(){
-		int[] number_iterations = {100, 1000, 10000, 100000};
-		int[] size_of_population = {100, 500, 1000, 5000, 10000};
-		int[] stopCondition = {1,5,10,15,20};
-		int[] elitismRate = {10,20,70};
+		int[] number_iterations = {100, 1000, 10000};
+		int[] size_of_population = {100, 500};
+		int[] stopCondition = {1,5,10,15};
+		int[] elitismRate = {5,10,15};
 		int[] crossoverRate = {85,50,25};
 		double[] mutationRate = {0.5,1.0,5.0};
 		int[] migrationRate = {10,20,40};

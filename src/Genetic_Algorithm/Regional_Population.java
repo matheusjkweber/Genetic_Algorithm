@@ -17,20 +17,20 @@ public class Regional_Population extends Population{
 	   * @param migration_tax The % of population that will migrate.
 	   * @param number_of_populations The number of subpopulations that this model will use.
 	   */
-	public Regional_Population(int size, double migration_rate, int migration_tax, int number_of_populations, int elitism_rate, Parameter parameters) {
-		super(size, elitism_rate, parameters);
-		this.migration_rate = migration_rate;
-		this.number_of_populations = number_of_populations;
-		this.migration_tax = migration_tax;
+	public Regional_Population(Parameter parameters) {
+		super(parameters);
+		this.migration_rate = parameters.getMigrationRate();
+		this.number_of_populations = parameters.getNumberOfPopulations();
+		this.migration_tax = parameters.getMigrationTax();
 		this.population = new ArrayList<Local_Population>();
 		
 		// Create the set of subpopulations.
 		for(int i = 0; i < number_of_populations; i++){
 			// Number_max_iterations of population will be based on migatrion rate.
 			int number = (int) (100 - migration_rate);
-			parameters.setMaximumIterations(number);
+			this.parameters.setMaximumIterations(number);
 			
-			population.add(new Local_Population(size, elitism_rate, parameters));
+			population.add(new Local_Population(parameters));
 		}
 	}
 

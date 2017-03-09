@@ -22,16 +22,17 @@ public abstract class Population {
 	protected Parameter parameters;
 	protected Chromosome last_selected;
 	protected int maximum_iterations;
+	//TODO: Create fixed values.
 	
 	/**
 	   * Constructor of population with value.
 	   * @param size The size of this population.
 	   */
 	
-	public Population(int size, int elitism_rate, Parameter parameters) {
+	public Population(Parameter parameters) {
 		super();
-		this.size = size;
-		this.elitism_rate = elitism_rate;
+		this.size = parameters.getSizeOfPopulation();
+		this.elitism_rate = parameters.getElitismRate();
 		this.parents = new ArrayList<Chromosome>();
 		this.parameters = parameters;
 		this.bigger_fitness = 0;
@@ -90,35 +91,74 @@ public abstract class Population {
 		this.elitism_rate = elitism_rate;
 	}
 	
+	/**
+	  * This method returns the last selected chromosome.
+	  * @return Chromosome.
+	  */
 	public Chromosome getLast_selected() {
 		return last_selected;
 	}
-
+	
+	/**
+	  * This method set a new last selected chromosome.
+	  * @param Chromosome.
+	  */
+	
 	public void setLast_selected(Chromosome last_selected) {
 		this.last_selected = last_selected;
 	}
 	
+	/**
+	  * This method returns the parameters of the population.
+	  * @return Parameter.
+	  */
 	
 	public Parameter getParameters() {
 		return parameters;
 	}
+	
+	/**
+	  * This method set a new parameter for the population.
+	  * @param Parameter.
+	  */
 
 	public void setParameters(Parameter parameters) {
 		this.parameters = parameters;
 	}
-
+	
+	/**
+	  * This method returns the bigger fitness of the population.
+	  * @return float.
+	  */
+	
 	public float getBigger_fitness() {
 		return bigger_fitness;
 	}
 
+	/**
+	  * This method set a new bigger fitness for the population.
+	  * @param float.
+	  */
+	
 	public void setBigger_fitness(float bigger_fitness) {
 		this.bigger_fitness = bigger_fitness;
 	}
 
+	/**
+	  * This method returns the last selected chromosome.
+	  * @return Chromosome.
+	  */
+	
 	public int getMaximum_iterations() {
 		return maximum_iterations;
 	}
 
+	
+	/**
+	  * This method set a new maximum_iterations for the population.
+	  * @param int.
+	  */
+	
 	public void setMaximum_iterations(int maximum_iterations) {
 		this.maximum_iterations = maximum_iterations;
 	}
@@ -126,6 +166,8 @@ public abstract class Population {
 	/**
 	 * If first time, this method will randomly generate a new population for the Genetic Algorithm.
 	 * If not first time, this method will also include the best parents from the previous generation.
+	 * Generic method, used just to be override.
+	 * @boolean first_time, true if first, false if not.
 	 */
 	
 	public void generatePopulation(boolean first_time){
@@ -153,6 +195,9 @@ public abstract class Population {
 	
 	/**
 	 * This method will perform a crossover based on a specific method. 
+	 * Generic method, used just to be override.
+	 * @param CrossoverType.
+	 * @param ArrayList<Chromosome>
 	 */
 	
 	public Chromosome crossover(CrossoverType type, ArrayList<Chromosome> chromosomes){
@@ -161,20 +206,17 @@ public abstract class Population {
 	}
 
 	/**
-	 * Create a random chromosome.
+	 * Create a random chromosome, with hard coded min and max setted to Kopp work.
+	 * TODO: Put fixed value.
 	 */
 	
 	public Chromosome create_chromosome(){
 		Random random = new Random();		
-		/*Gene d = new Gene("Diameter", 200, true, MutationType.SBS);
-		Gene hg = new Gene("Hg", 5, true, MutationType.SBS);
-		Gene l = new Gene("Lenght", 50, true, MutationType.SBS);
-		Gene q = new Gene("Flow", 50, true, MutationType.SBS);*/
 		
-		Gene d = new Gene("Diameter", random.nextInt(2000) + 100, true, MutationType.SBS, 100, 2000); // min: 100, max: 2000
-		Gene hg = new Gene("Hg", random.nextInt(25) + 1, true, MutationType.SBSD3, 1, 25); // min: 1, max: 25
-		Gene l = new Gene("Lenght", random.nextInt(1000) + 1, true, MutationType.SBS, 1, 1000); // min: 1, max: 1000
-		Gene q = new Gene("Flow", random.nextInt(2000) + 50, true, MutationType.SBS, 50, 2000); // min: 50, max: 2000
+		Gene d = new Gene("Diameter", random.nextInt(2000) + 100, true, MutationType.SBS, 100, 2000, 0);
+		Gene hg = new Gene("Hg", random.nextInt(25) + 1, true, MutationType.SBSD3, 1, 25, 0);
+		Gene l = new Gene("Lenght", random.nextInt(1000) + 1, true, MutationType.SBS, 1, 1000, 0);
+		Gene q = new Gene("Flow", random.nextInt(2000) + 50, true, MutationType.SBS, 50, 2000, 0);
 		
 		ArrayList<Gene> genes = new ArrayList<Gene>();
 		genes.add(d);
@@ -288,7 +330,7 @@ public abstract class Population {
 	 * parts of it as parent.
 	 * @param chromosomes The list that will get the parents.
 	 * @param number The number of parents that is needed.
-	 * @param ArrayList<Chromosome> The selected parents.
+	 * @return ArrayList<Chromosome> The selected parents.
 	 */
 	
 	public ArrayList<Chromosome> rouletteSelection(ArrayList<Chromosome> chromosomes, int number){
@@ -311,21 +353,9 @@ public abstract class Population {
 		float last = 0;
 		ArrayList<Chromosome> final_selection = new ArrayList<Chromosome>();
 		
-		/*for(int j =0; j < chromosomes.size(); j++){
-			for(int i = 0; i < chromosomes.size() - 1; i++){
-				
-				if(chromosomes.get(i).getFitness2() > chromosomes.get(i+1).getFitness2()){
-					Chromosome aux = chromosomes.get(i);
-					chromosomes.set(i, chromosomes.get(i+1));
-					chromosomes.set(i+1, aux);
-				}
-			}
-		}*/
-		
 		while(selected <= number){
 			
 			for(int i = 0; i < chromosomes.size(); i++){
-				float actual1 = chromosomes.get(i).getFitness2();
 				float actual = last + chromosomes.get(i).getFitness2();
 				if(r >= last && r <= actual){
 					final_selection.add(chromosomes.get(i));

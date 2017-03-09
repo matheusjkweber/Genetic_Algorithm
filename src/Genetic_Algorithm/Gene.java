@@ -17,6 +17,7 @@ public class Gene {
 	private MutationType mutation;
 	private int min;
 	private int max;
+	private float fixedValue;
 	
 	/**
 	   * Constructor of gene with value.
@@ -24,10 +25,13 @@ public class Gene {
 	   * @param value A real number value that this gene start.
 	   * @param mutate True if this gene suffer mutation, false if not.
 	   * @param MutationType The type of mutation that this gene suffer.
+	   * @param min A value that define the minimum value for the gene.
+	   * @param max A value that define a maximum value for the gene.
+	   * @param fixedValue A value that fix the gene to a value, if 0 don`t fix. 
 	   */
 	
 	public Gene(String label, float value, boolean mutate,
-			MutationType mutation, int min, int max) {
+			MutationType mutation, int min, int max, float fixedValue) {
 		super();
 		this.label = label;
 		this.value = value;
@@ -35,6 +39,7 @@ public class Gene {
 		this.mutation = mutation;
 		this.min = min;
 		this.max = max;
+		this.fixedValue = fixedValue;
 	}
 	
 	/**
@@ -110,59 +115,102 @@ public class Gene {
 	}
 	
 	
+	/**
+	  * This method set the minimum value that the gene can assume.
+	  * @return int.
+	  */
 	
 	public int getMin() {
 		return min;
 	}
 
+	/**
+	  * This method set a new mininum value for this gene.
+	  * @param int.
+	  */
+	
 	public void setMin(int min) {
 		this.min = min;
 	}
 
+	
+	/**
+	  * This method set the maximum value that the gene can assume.
+	  * @param int.
+	  */
+	
+	public void setMax(int max) {
+		this.max = max;
+	}
+	
+	/**
+	  * This method returns the maximum value that the gene can assume.
+	  * @return int.
+	  */
+	
 	public int getMax() {
 		return max;
 	}
-
-	public void setMax(int max) {
-		this.max = max;
+	
+	
+	/**
+	  * This method returns the fixed value that the gene can assume.
+	  * @return float.
+	  */
+	
+	public float getFixed_value() {
+		return fixedValue;
+	}
+	
+	/**
+	  * This method set the fixed value that the gene can assume.
+	  * @param float.
+	  */
+	
+	public void setFixed_value(float fixedValue) {
+		this.fixedValue = fixedValue;
 	}
 
 	/**
 	 * This method mutation a gene based on MutantionType.
 	 * @param step The step that mutation will have.
 	 */
-	public void mutate(int step){
-		if(mutation == MutationType.SBSD3){
-			step = step / 3;
-		}
-		
-		Random random = new Random();
-		
-		// Random the step.
-		int r1 = random.nextInt(step) + 1;
-		step = r1;
-		
-		int r = random.nextInt(2) + 1;
-		
-		// Random if is positive or negative.
-		if(r == 1){
-			step = step * -1;
-		}
-		
-		float final_value = value + step;
-		
-		// Only change if final value is positive.
-		if(final_value > 0){
-			value = final_value;
-		}
-		
-		// Verify if it is between minimum and maximum allowed.
-		if(value < min){
-			value = min;
-		}
-		
-		if(value > max){
-			value = max;
+	
+	public void mutate(){
+		if(this.fixedValue != 0){
+			Random random = new Random();
+			int step = 100;
+			
+			if(mutation == MutationType.SBSD3){
+				step = step / 3;
+			}
+			
+			// Random the step.
+			int r1 = random.nextInt(step) + 1;
+			step = r1;
+			
+			int r = random.nextInt(2) + 1;
+			
+			// Random if is positive or negative.
+			if(r == 1){
+				step = step * -1;
+			}
+			
+			float final_value = value + step;
+			
+			// Only change if final value is positive.
+			if(final_value > 0){
+				value = final_value;
+			}
+			
+			// Verify if it is between minimum and maximum allowed.
+			if(value <= min){
+				value = min;
+			}
+			
+			if(value >= max){
+				value = max;
+			}
 		}
 	}
 	

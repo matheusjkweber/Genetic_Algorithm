@@ -8,6 +8,10 @@ package Genetic_Algorithm;
 * @since   2017-01-07
 */
 
+// GM - Global model.
+// RM - Regional model.
+// LM - Local model.
+
 public enum ModelPopulationType {
 	GM, RM, LM;
 }

@@ -14,7 +14,7 @@ public class Global_Population extends Population{
 	   
 	   */
 	public Global_Population(int size, int n_slaves, int elitism_rate, Parameter parameters) {
-		super(size, elitism_rate, parameters);
+		super(parameters);
 		this.population = new ArrayList<Chromosome>();
 		this.n_slaves = n_slaves;
 	}
@@ -71,7 +71,7 @@ public class Global_Population extends Population{
 	 */
 	
 	public void generatePopulation(boolean first_time){
-		if(first_time == true){
+		/*if(first_time == true){
 			for(int i = 0; i < this.size; i++){
 				population.add(this.create_chromosome());
 			}
@@ -100,7 +100,7 @@ public class Global_Population extends Population{
 			}
 			
 			population = new_population;
-		}
+		}*/
 			
 	}
 }

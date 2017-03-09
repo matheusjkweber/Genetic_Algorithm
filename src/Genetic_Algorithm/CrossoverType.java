@@ -8,6 +8,8 @@ package Genetic_Algorithm;
 * @since   2017-01-07
 */
 
+// One-point crossover.
+// Two-point crossover.
 public enum CrossoverType {
 	P, PP;
 }

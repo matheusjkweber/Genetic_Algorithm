@@ -2,7 +2,7 @@ package Genetic_Algorithm;
 
 public class Config {
 	private float p_mass; // specific mass
-	private float p1; // R$/kWh - custo do kwh em tarifa verde
+	private float p1; // R$/kWh - grecusto do kwh em tarifa verde
 	private float p2; // R$/kWh - custo do kw de demanda
 	private float p3; // R$/kW - custo do kwh horario reservado
 	private float p4; // R$/kg - custo do kg da chapa de aço
