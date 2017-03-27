@@ -25,7 +25,7 @@ import java.util.Random;
 public class Genetic_Algorithm {
 	private static ArrayList<Parameter> parameters;
 	
-	public static void main(String [] args) throws FileNotFoundException{
+	/*public static void main(String [] args) throws FileNotFoundException{
 		
 		// Configuration for tests and report.
 		
@@ -80,5 +80,5 @@ public class Genetic_Algorithm {
 		
 		pw.write(sb.toString());
         pw.close();
-	}
+	}*/
 }
