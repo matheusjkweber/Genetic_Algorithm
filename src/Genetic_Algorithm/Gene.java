@@ -177,7 +177,7 @@ public class Gene {
 	 */
 	
 	public void mutate(){
-		if(this.fixedValue != 0){
+		if(this.fixedValue == 0){
 			Random random = new Random();
 			int step = 100;
 			

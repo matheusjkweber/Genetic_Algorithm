@@ -3,8 +3,6 @@ package Genetic_Algorithm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import java.lang.*;
 
 /**
 * The Population class implements a generic population, populate, selection and crossover.
@@ -213,10 +211,30 @@ public abstract class Population {
 	public Chromosome create_chromosome(){
 		Random random = new Random();		
 		
-		Gene d = new Gene("Diameter", random.nextInt(2000) + 100, true, MutationType.SBS, 100, 2000, 0);
-		Gene hg = new Gene("Hg", random.nextInt(25) + 1, true, MutationType.SBSD3, 1, 25, 0);
-		Gene l = new Gene("Lenght", random.nextInt(1000) + 1, true, MutationType.SBS, 1, 1000, 0);
-		Gene q = new Gene("Flow", random.nextInt(2000) + 50, true, MutationType.SBS, 50, 2000, 0);
+		Gene d = new Gene("Diameter", random.nextInt(2000) + 100, true, MutationType.SBS, 100, 2000, parameters.getFixed_genes()[0]);
+		Gene hg = new Gene("Hg", random.nextInt(25) + 1, true, MutationType.SBSD3, 1, 25, parameters.getFixed_genes()[1]);
+		Gene l = new Gene("Lenght", random.nextInt(1000) + 1, true, MutationType.SBS, 1, 1000, parameters.getFixed_genes()[2]);
+		Gene q = new Gene("Flow", random.nextInt(2000) + 50, true, MutationType.SBS, 50, 2000, parameters.getFixed_genes()[3]);
+		
+		if(parameters.getFixed_genes()[0] > 0){
+			d.setFixed_value(parameters.getFixed_genes()[0]);
+			d.setValue(parameters.getFixed_genes()[0]);
+		}
+		
+		if(parameters.getFixed_genes()[1] > 0){
+			hg.setFixed_value(parameters.getFixed_genes()[1]);
+			hg.setValue(parameters.getFixed_genes()[1]);
+		}
+		
+		if(parameters.getFixed_genes()[2] > 0){
+			l.setFixed_value(parameters.getFixed_genes()[2]);
+			l.setValue(parameters.getFixed_genes()[2]);
+		}
+		
+		if(parameters.getFixed_genes()[3] > 0){
+			q.setFixed_value(parameters.getFixed_genes()[3]);
+			q.setValue(parameters.getFixed_genes()[3]);
+		}
 		
 		ArrayList<Gene> genes = new ArrayList<Gene>();
 		genes.add(d);
@@ -276,7 +294,7 @@ public abstract class Population {
 	
 	public ArrayList<Chromosome> tournamentSelection(ArrayList<Chromosome> chromosomes, int number){
 		// Calculate the number of series.
-		int number_of_series = (int) chromosomes.size() / 25;
+		int number_of_series = chromosomes.size() / 25;
 		// Fix the number_of_series to work.
 		if(number_of_series < number){
 			number_of_series = number;
@@ -311,7 +329,7 @@ public abstract class Population {
 			}else if(number < number_of_series){
 				// Example, 4 parents for 8 series.
 				// Get 2 for each series, form a new array of chromosomes and call tournament selection. 
-				int selected_for_array = (int) number_of_series / 4;
+				int selected_for_array = number_of_series / 4;
 				for(int i = 0; i < number_of_series; i++){
 					for(int l = 0; l < selected_for_array; l++){
 						final_selection.add(tournament.get(i).get(l));
@@ -461,7 +479,7 @@ public abstract class Population {
 		return null;
 	}
 	
-	public Chromosome train(){
+	public ArrayList<Chromosome> train(){
 		return null;
 	}
 }

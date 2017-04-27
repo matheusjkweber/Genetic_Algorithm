@@ -1,8 +1,6 @@
 package Genetic_Algorithm;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Random;
 
 /**
 * The Chromossome class implements the chromossome of GA, fitness function and mutation.
@@ -80,7 +78,7 @@ public class Chromosome implements Comparable {
 	
 	@Override
 	public String toString() {
-		return "Chromosome [Fitness=" + fitness + ", D = "+genes.get(0).getValue()+", hg = "+genes.get(1).getValue()+", L = "+
+		return "[D = "+genes.get(0).getValue()+", hg = "+genes.get(1).getValue()+", L = "+
 	genes.get(2).getValue()+", Q = "+genes.get(3).getValue()+"]";
 	}
 	
@@ -98,7 +96,7 @@ public class Chromosome implements Comparable {
 		
 		float weight = (float) ((3.14 * d.getValue()/1000) * config.getP_mass());
 		float speed = (float) ((q.getValue()/1000 * 4)/(3.1415*(Math.pow(d.getValue()/1000, 2))));
-		float fixed_cost = (float) (weight * l.getValue() * config.getP4()); 
+		float fixed_cost = weight * l.getValue() * config.getP4(); 
 		float anual_fixed_cost = fixed_cost * config.getFRC();
 		
 		// Calculus of AMT

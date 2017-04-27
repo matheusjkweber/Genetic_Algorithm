@@ -24,6 +24,7 @@ public class Global_Population extends Population{
 	  * @return ArrayList<Chromosome> A array of chromosomes.
 	  */
 	
+	@Override
 	public ArrayList<Chromosome> getPopulation() {
 		return population;
 	}
@@ -70,6 +71,7 @@ public class Global_Population extends Population{
 	 * If not first time, this method will also include the best parents from the previous generation.
 	 */
 	
+	@Override
 	public void generatePopulation(boolean first_time){
 		/*if(first_time == true){
 			for(int i = 0; i < this.size; i++){

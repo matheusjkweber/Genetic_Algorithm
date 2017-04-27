@@ -1,5 +1,6 @@
 package Genetic_Algorithm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 * @since   2017-01-07
 */
 
-public class Parameter{
+public class Parameter implements Comparable, Serializable {
 	private ModelPopulationType modelPopulation;
 	private int sizeOfPopulation;
 	private int elitismRate;
@@ -26,7 +27,10 @@ public class Parameter{
 	private int migrationTax;
 	private int numberOfPopulations;
 	private int nSlaves;
-	
+	private double fitness;
+	private double time;
+	private transient Chromosome finalGene;
+	private transient float[] fixed_genes;
 	/**
 	   * Constructor of parameter with value.
 	   * @param modelPopulation The model of population that will be used on this test.
@@ -49,7 +53,7 @@ public class Parameter{
 	public Parameter(ModelPopulationType modelPopulation, int sizeOfPopulation,
 			int elitismRate, SelectionType selection, float crossoverRate,
 			CrossoverType crossoverType, float mutationRate, int mutationStep,
-			float stopCondition, int maximumIterations, int nGenerations, double migrationRate, double migrationChance, int numberOfPopulations, int nSlaves) {
+			float stopCondition, int maximumIterations, int nGenerations, double migrationRate, double migrationChance, int numberOfPopulations, int nSlaves, float[] fixed_genes) {
 		super();
 		this.modelPopulation = modelPopulation;
 		this.sizeOfPopulation = sizeOfPopulation;
@@ -67,6 +71,7 @@ public class Parameter{
 		//this.migration_chance = e;
 		this.numberOfPopulations = numberOfPopulations;
 		this.nSlaves = nSlaves;
+		this.fixed_genes = fixed_genes;
 	}
 	
 	/**
@@ -83,7 +88,7 @@ public class Parameter{
 	   */
 	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation,
-			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep){
+			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep, float[] fixed_genes){
 		super();
 		this.maximumIterations = numberIterations;
 		this.stopCondition = stopCondition;
@@ -94,6 +99,7 @@ public class Parameter{
 		this.mutationRate = mutationRate;
 		this.mutationStep = mutationStep;
 		this.modelPopulation = modelPopulation;
+		this.fixed_genes = fixed_genes;
 	}
 	
 	/**
@@ -114,7 +120,7 @@ public class Parameter{
 	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation, 
 			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep,
-			double migrationRate, int migrationTax, int numberOfPopulations){
+			double migrationRate, int migrationTax, int numberOfPopulations, float[] fixed_genes){
 		super();
 		this.maximumIterations = numberIterations;
 		this.stopCondition = stopCondition;
@@ -128,6 +134,7 @@ public class Parameter{
 		this.migrationRate = migrationRate;
 		this.numberOfPopulations = numberOfPopulations;
 		this.migrationTax = migrationTax;
+		this.fixed_genes = fixed_genes;
 	}
 	
 	
@@ -427,7 +434,7 @@ public class Parameter{
 							int cross = crossoverRate[v];
 							for(int b = 0; b < mutationRate.length; b++){
 								float mutation = (float) mutationRate[b];
-								Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10);
+								Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10, new float[]{0,0,0,0});
 								parameters.add(p2);
 							}
 						}
@@ -476,7 +483,7 @@ public class Parameter{
 										for(int l = 0; l < numberOfPopulations.length; l++){
 											int numberP = numberOfPopulations[l];
 											Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
-													migrationR, migrationT, numberP);
+													migrationR, migrationT, numberP, new float[]{0,0,0,0});
 											parameters.add(p2);
 										}
 									}
@@ -492,5 +499,48 @@ public class Parameter{
 		return parameters;
 	}
 	
-	
+	public float[] getFixed_genes() {
+		return fixed_genes;
+	}
+
+	public void setFixed_genes(float[] fixed_genes) {
+		this.fixed_genes = fixed_genes;
+	}
+
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double fitness) {
+		this.fitness = fitness;
+	}
+
+	public double getTime() {
+		return time;
+	}
+
+	public void setTime(double time) {
+		this.time = time;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		Parameter p = (Parameter) o;
+		double compareFitness = p.getFitness();
+		
+		return (int) (this.fitness - compareFitness);
+	}
+
+	public Chromosome getFinalGene() {
+		return finalGene;
+	}
+
+	public void setFinalGene(Chromosome finalGene) {
+		this.finalGene = finalGene;
+	}
+
+	public void setMigrationTax(int migrationTax) {
+		this.migrationTax = migrationTax;
+	}
 }

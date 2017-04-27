@@ -23,6 +23,7 @@ public class Local_Population extends Population implements Runnable{
 	  * @return ArrayList<Chromosome> A array of chromosomes.
 	  */
 	
+	@Override
 	public ArrayList<Chromosome> getPopulation() {
 		return population;
 	}
@@ -42,6 +43,7 @@ public class Local_Population extends Population implements Runnable{
 	 * @param boolean If is first time = true, if not = false.
 	 */
 	
+	@Override
 	public void generatePopulation(boolean first_time){
 		if(first_time == true){
 			for(int i = 0; i < this.size; i++){
@@ -109,10 +111,12 @@ public class Local_Population extends Population implements Runnable{
 	 * This method train the population and returns the best chromosome found.
 	 * @return Chromosome.
 	 */
-	public Chromosome train(){
+	@Override
+	public ArrayList<Chromosome> train(){
 		boolean stop = false;
 		int iterations = 0;
 		int unchangedLastSelected = 0;
+		ArrayList<Chromosome> selectedChromosomes = new ArrayList<Chromosome>();
 		// Genetic algorithm loop.
 		while(stop == false){
 			iterations++;
@@ -141,6 +145,7 @@ public class Local_Population extends Population implements Runnable{
 			// Save the best.
 			if(parents.size() > 0){
 				last_selected = parents.get(0);
+				selectedChromosomes.add(last_selected);
 			}
 
 			float proportion = (int)(this.maximum_iterations*(parameters.getStopCondition()/100.0f));
@@ -151,7 +156,7 @@ public class Local_Population extends Population implements Runnable{
 			}
 			
 		}
-		return last_selected;
+		return selectedChromosomes;
 		
 	}
 

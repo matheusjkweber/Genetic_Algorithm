@@ -102,20 +102,22 @@ public class Regional_Population extends Population{
 	 * If not first time, this method will also include the best parents from the previous generation.
 	 */
 	
+	@Override
 	public void generatePopulation(boolean first_time){
 		for(int j = 0; j < this.number_of_populations; j++){
 			this.population.get(j).generatePopulation(first_time);
 		}		
 	}
 	
-	public Chromosome train(){
+	@Override
+	public ArrayList<Chromosome> train(){
 		boolean stop = false;
 		int iterations = 0;
 		int unchangedLastSelected = 0;
 		ArrayList<Chromosome> selected = new ArrayList<Chromosome>();
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		Chromosome select = null;
-
+		ArrayList<Chromosome> selectedChromosomes = new ArrayList<Chromosome>();
 		// Genetic algorithm loop.
 		while(stop == false){
 			iterations++;	
@@ -176,6 +178,7 @@ public class Regional_Population extends Population{
 					this.last_selected = select;
 					unchangedLastSelected = 0;
 				}
+				selectedChromosomes.add(selected.get(i));
 			}
 			
 			// If reach the maximum iterations number, stop.
@@ -191,6 +194,7 @@ public class Regional_Population extends Population{
 			}
 		}
 		
-		return this.last_selected;
+		selectedChromosomes.add(this.last_selected);
+		return selectedChromosomes;
 	}
 }
