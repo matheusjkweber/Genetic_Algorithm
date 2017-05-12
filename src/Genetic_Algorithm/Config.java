@@ -1,6 +1,8 @@
 package Genetic_Algorithm;
 
-public class Config {
+import java.io.Serializable;
+
+public class Config implements Serializable {
 	private float p_mass; // specific mass
 	private float p1; // R$/kWh - grecusto do kwh em tarifa verde
 	private float p2; // R$/kWh - custo do kw de demanda
@@ -21,9 +23,9 @@ public class Config {
 	private float c;
 	private float n1;
 	
-	public Config(float p_mass, float p1, float p2, float p3, float p4,
-			float rend, float n_h, int n, float tax, float PIS, float COFINS, float ICMS, float c, float n1) {
-		this.p_mass = p_mass;
+	public Config(float p1, float p2, float p3, float p4,
+			float rend, float n_h, int n, float tax, float PIS, float COFINS, float ICMS) {
+		this.p_mass = (float) 21.2;
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
@@ -46,8 +48,9 @@ public class Config {
 		rev_p2 = p2 / (1 - (PIS/100) - (COFINS/100) - (ICMS/100));
 		rev_p3 = p3 / (1 - (PIS/100) - (COFINS/100) - (ICMS/100));
 		
-		this.c = c;
-		this.n1 = n1;
+		this.c = 90;
+		this.n1 = 120;
+		this.n = n;
 	}
 	
 	public float getP_mass() {

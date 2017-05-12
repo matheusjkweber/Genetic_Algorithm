@@ -44,6 +44,7 @@ public class Genetic_Algorithm implements Runnable{
 	private boolean isCalculus;
 	private Chromosome answer;
 	private ArrayList<Chromosome> answers;
+	public static Config config;
 	
 	public Genetic_Algorithm(Shell gui){
 		this.gui = gui;

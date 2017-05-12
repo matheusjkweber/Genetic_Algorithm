@@ -92,7 +92,7 @@ public class Chromosome implements Comparable {
 		Gene l = genes.get(2);
 		Gene q = genes.get(3);
 		
-		Config config = new Config();
+		Config config = Genetic_Algorithm.config;
 		
 		float weight = (float) ((3.14 * d.getValue()/1000) * config.getP_mass());
 		float speed = (float) ((q.getValue()/1000 * 4)/(3.1415*(Math.pow(d.getValue()/1000, 2))));
