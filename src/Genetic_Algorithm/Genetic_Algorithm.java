@@ -1,9 +1,11 @@
 package Genetic_Algorithm;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -101,15 +103,22 @@ public class Genetic_Algorithm implements Runnable{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			if(this.best_local.get(0).getFitness() < this.best_regional.get(0).getFitness()){
-				bests = this.best_local;
-				System.out.println(this.best_local.get(0).getFitness()+" "+this.best_regional.get(0).getFitness());
+			
+			if(this.best_regional != null){
+				if(this.best_local.get(0).getFitness() < this.best_regional.get(0).getFitness()){
+					bests = this.best_local;
+					System.out.println(this.best_local.get(0).getFitness()+" "+this.best_regional.get(0).getFitness());
 
+				}else{
+					bests = this.best_regional;
+					System.out.println(this.best_local.get(0).getFitness()+" "+this.best_regional.get(0).getFitness());
+
+				}
 			}else{
-				bests = this.best_regional;
-				System.out.println(this.best_local.get(0).getFitness()+" "+this.best_regional.get(0).getFitness());
-
+				bests = this.best_local;
+				System.out.println(this.best_local.get(0).getFitness()+" - Nao entrou no regional.");
 			}
+			
 			
 			// Save the bests configuration.
 			FileOutputStream fos;
@@ -242,6 +251,131 @@ public class Genetic_Algorithm implements Runnable{
         return bests;
 	}
 	
+	private static void trainFromSheet(){
+		Genetic_Algorithm.config = new Config();
+		ArrayList<Chromosome> expectedChromosomes = getChromosomesFromEntry();
+		
+		// Generate parameters.
+		int[] number_iterations = {1000, 5000};
+		int[] size_of_population = {1000, 5000, 10000};
+		int[] stopCondition = {90, 50, 10};
+		int[] elitismRate = {10};
+		int[] crossoverRate = {0};
+		double[] mutationRate = {40};
+		int[] migrationRate = {10};
+		int[] migrationTax = {10};
+		int[] numberOfPopulations = {4,8,16};
+		SelectionType[] selectionTypes = {SelectionType.TM};
+		
+		Population population;
+		
+		for(int i = 0; i < number_iterations.length; i++){
+			int number = number_iterations[i];
+			for(int j = 0; j < size_of_population.length; j++){
+				int size = size_of_population[j];
+				for(int z = 0; z < stopCondition.length; z++){
+					int stop = stopCondition[z];
+					for(int p = 0; p < elitismRate.length; p++){
+						int elitism = elitismRate[p];
+						for(int v = 0; v < crossoverRate.length; v++){
+							int cross = crossoverRate[v];
+							for(int b = 0; b < mutationRate.length; b++){
+								float mutation = (float) mutationRate[b];
+								for(int a = 0; a < migrationRate.length; a++){
+									int migrationR = migrationRate[a];
+									for(int q = 0; q < migrationTax.length;q++){
+										int migrationT = migrationTax[q];
+										for(int l = 0; l < numberOfPopulations.length; l++){
+											int numberP = numberOfPopulations[l];
+											for(int x = 0; x < selectionTypes.length; x++){
+												for(int h = 0; h < expectedChromosomes.size(); h++){
+													SelectionType sel = selectionTypes[x];
+													Chromosome c = expectedChromosomes.get(h);
+													float[] genes = {c.getGenes().get(0).getValue(), c.getGenes().get(1).getValue(), c.getGenes().get(2).getValue(), c.getGenes().get(3).getValue()};
+													Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
+															migrationR, migrationT, numberP, genes, sel);
+													System.out.println(p2);
+													population = new Local_Population(p2);
+													
+													// Test with parameters.
+													System.out.println("Comecando...");
+													ArrayList<Chromosome> answers = population.train();
+													Chromosome selected = answers.get(answers.size()-1);
+													System.out.println(selected);
+													// Write answer in a .csv with expectedChromosome and % of improvement.
+												}
+											}
+										}
+									}
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		
+	}
+	
+	private static ArrayList<Chromosome> getChromosomesFromEntry(){
+		String csvFile = "arquivo_entrada.csv";
+        BufferedReader br = null;
+        String line = "";
+        String cvsSplitBy = ",";
+        ArrayList<Chromosome> results = new ArrayList<Chromosome>();
+        try {
+        	 br = new BufferedReader(new FileReader(csvFile));
+        	 
+        	 // Jump on line.
+        	 br.readLine();
+        	 
+        	 // Read the lines.
+             while ((line = br.readLine()) != null) {
+
+				 // use comma as separator
+				 String[] values = line.split(cvsSplitBy);
+				 
+				 // Convert values.
+				 float height = Float.parseFloat(values[0]);
+				 float lenght = Float.parseFloat(values[1]);
+				 float flow = Float.parseFloat(values[2]);
+				 float final_fitness = Float.parseFloat(values[3]);
+				 
+				 Gene d = new Gene("Diameter", 0, true, MutationType.SBS, 100, 1500, 0);
+				 Gene hg = new Gene("Hg", height, true, MutationType.SBSD3, 1, 25, height);
+				 Gene l = new Gene("Lenght", lenght, true, MutationType.SBS, 1, 1000, lenght);
+				 Gene q = new Gene("Flow", flow, true, MutationType.SBS, 50, 2000, flow);
+         		 
+				 ArrayList<Gene> genes = new ArrayList<Gene>();
+				 genes.add(d);
+				 genes.add(q);
+				 genes.add(hg);
+				 genes.add(l);
+				 
+        		
+                 Chromosome c = new Chromosome(genes);
+                 
+                 c.setFitness(final_fitness);
+                 results.add(c);
+            }
+		}catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+		return results;
+	}
 	public ArrayList<Parameter> getBests(){
 		return bests;
 	}
@@ -270,4 +404,11 @@ public class Genetic_Algorithm implements Runnable{
 		this.answers = answers;
 	}
 	
+	/**
+	 * Main used for tests.
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		trainFromSheet();
+	}
 }

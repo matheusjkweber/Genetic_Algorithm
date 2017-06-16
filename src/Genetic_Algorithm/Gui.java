@@ -79,14 +79,17 @@ public class Gui {
 	 * Launch the application.
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	
+	//TODO: Uncoment to go back to normal program.
+	
+	/*public static void main(String[] args) {
 		try {
 			Gui window = new Gui();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Open the window.
@@ -285,7 +288,7 @@ public class Gui {
 		
 		TableColumn tblclmnLarg = new TableColumn(table_1, SWT.NONE);
 		tblclmnLarg.setWidth(100);
-		tblclmnLarg.setText("Largura");
+		tblclmnLarg.setText("Comprimento");
 		
 		TableColumn tblclmnVazo = new TableColumn(table_1, SWT.NONE);
 		tblclmnVazo.setWidth(100);
@@ -316,35 +319,35 @@ public class Gui {
 		grpCalcularValores.setBounds(0, 0, 680, 152);
 		
 		Label lblDimetro = new Label(grpCalcularValores, SWT.NONE);
-		lblDimetro.setBounds(10, 36, 70, 38);
-		lblDimetro.setText("Di\u00E2metro");
+		lblDimetro.setBounds(10, 36, 86, 26);
+		lblDimetro.setText("Di\u00E2metro(m)");
 		
 		text = new Text(grpCalcularValores, SWT.BORDER);
-		text.setBounds(86, 33, 165, 26);
+		text.setBounds(102, 33, 149, 26);
 		text.setText("0");
 		
 		Label lblAlturaGeomtrica = new Label(grpCalcularValores, SWT.NONE);
-		lblAlturaGeomtrica.setBounds(10, 78, 128, 20);
-		lblAlturaGeomtrica.setText("Altura Geom\u00E9trica");
+		lblAlturaGeomtrica.setBounds(10, 78, 149, 20);
+		lblAlturaGeomtrica.setText("Altura Geom\u00E9trica(m)");
 		
 		text_1 = new Text(grpCalcularValores, SWT.BORDER);
-		text_1.setBounds(144, 78, 107, 26);
+		text_1.setBounds(165, 78, 86, 26);
 		text_1.setText("0");
 		
 		Label lblVazo = new Label(grpCalcularValores, SWT.NONE);
-		lblVazo.setBounds(293, 36, 40, 20);
-		lblVazo.setText("Vaz\u00E3o");
+		lblVazo.setBounds(293, 36, 115, 20);
+		lblVazo.setText("Vaz\u00E3o(m3^(s-1))");
 		
 		Label lblLargura = new Label(grpCalcularValores, SWT.NONE);
-		lblLargura.setBounds(293, 78, 50, 20);
-		lblLargura.setText("Largura");
+		lblLargura.setBounds(293, 78, 115, 20);
+		lblLargura.setText("Comprimento(m)");
 		
 		text_2 = new Text(grpCalcularValores, SWT.BORDER);
-		text_2.setBounds(343, 33, 186, 26);
+		text_2.setBounds(414, 33, 115, 26);
 		text_2.setText("0");
 
 		text_3 = new Text(grpCalcularValores, SWT.BORDER);
-		text_3.setBounds(353, 78, 176, 26);
+		text_3.setBounds(414, 78, 115, 26);
 		text_3.setText("0");
 
 		Button btnCalcular = new Button(grpCalcularValores, SWT.NONE);
@@ -367,6 +370,8 @@ public class Gui {
 					
 					float[] fixed_genes = {diameter, flow, geometricHeight, length};
 					best.setFixed_genes(fixed_genes);
+					best.setMaximumIterations(100000);
+					best.setStopCondition(95);
 					genetic.calculate(best);
 					
 					while(genetic.isFinish() == false){
@@ -650,8 +655,8 @@ public class Gui {
 					float icms = Float.parseFloat(text_15.getText());
 					int n = Integer.parseInt(text_16.getText());
 					
-					Genetic_Algorithm.config = new Config(p1, p2, p3, p4, rend, n_h, n, taxa, pis, cofins, icms);
-					
+					config = new Config(p1, p2, p3, p4, rend, n_h, n, taxa, pis, cofins, icms);
+					Genetic_Algorithm.config = config;
 					// Save the new configuration.
 					FileOutputStream fos;
 					try {

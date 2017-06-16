@@ -79,7 +79,7 @@ public class Chromosome implements Comparable {
 	@Override
 	public String toString() {
 		return "[D = "+genes.get(0).getValue()+", hg = "+genes.get(1).getValue()+", L = "+
-	genes.get(2).getValue()+", Q = "+genes.get(3).getValue()+"]";
+	genes.get(2).getValue()+", Q = "+genes.get(3).getValue()+", Fitness = "+fitness+"]";
 	}
 	
 	/**
@@ -141,7 +141,11 @@ public class Chromosome implements Comparable {
 		// TODO Auto-generated method stub
 		Chromosome c = (Chromosome) o;
 		float compareFitness = c.getFitness();
-		
-		return (int) (this.fitness - compareFitness);
+		if (this.fitness < compareFitness)
+			return -1;
+		else if (compareFitness > this.fitness)
+			return 1;
+		else
+			return 0;
 	}
 }

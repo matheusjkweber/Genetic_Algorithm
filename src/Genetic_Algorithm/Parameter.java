@@ -2,6 +2,7 @@ package Genetic_Algorithm;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
 * The Parameter class implements the parameters that can be used on test.
@@ -29,8 +30,11 @@ public class Parameter implements Comparable, Serializable {
 	private int nSlaves;
 	private double fitness;
 	private double time;
+	private float expectedFitness;
 	private transient Chromosome finalGene;
 	private transient float[] fixed_genes;
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	   * Constructor of parameter with value.
 	   * @param modelPopulation The model of population that will be used on this test.
@@ -88,7 +92,7 @@ public class Parameter implements Comparable, Serializable {
 	   */
 	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation,
-			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep, float[] fixed_genes){
+			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep, float[] fixed_genes, SelectionType selection){
 		super();
 		this.maximumIterations = numberIterations;
 		this.stopCondition = stopCondition;
@@ -100,6 +104,7 @@ public class Parameter implements Comparable, Serializable {
 		this.mutationStep = mutationStep;
 		this.modelPopulation = modelPopulation;
 		this.fixed_genes = fixed_genes;
+		this.selection = selection;
 	}
 	
 	/**
@@ -120,7 +125,7 @@ public class Parameter implements Comparable, Serializable {
 	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation, 
 			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep,
-			double migrationRate, int migrationTax, int numberOfPopulations, float[] fixed_genes){
+			double migrationRate, int migrationTax, int numberOfPopulations, float[] fixed_genes, SelectionType selection){
 		super();
 		this.maximumIterations = numberIterations;
 		this.stopCondition = stopCondition;
@@ -135,6 +140,7 @@ public class Parameter implements Comparable, Serializable {
 		this.numberOfPopulations = numberOfPopulations;
 		this.migrationTax = migrationTax;
 		this.fixed_genes = fixed_genes;
+		this.selection = selection;
 	}
 	
 	
@@ -409,6 +415,105 @@ public class Parameter implements Comparable, Serializable {
 	}
 	
 	/**
+	  * This method returns a float[].
+	  * @return float[] The fixed_genes of the parameter.
+	  */
+	
+	public float[] getFixed_genes() {
+		return fixed_genes;
+	}
+	
+	/**
+	  * This method set a new value for fixed_genes.
+	  * @param float[] The new fixed_genes for this parameter.
+	  */
+	
+	public void setFixed_genes(float[] fixed_genes) {
+		this.fixed_genes = fixed_genes;
+	}
+	
+	/**
+	  * This method returns a double.
+	  * @return double The fitness of the parameter.
+	  */
+	
+	public double getFitness() {
+		return fitness;
+	}
+
+	/**
+	  * This method set a new value for fitness.
+	  * @param double The new fitness for this parameter.
+	  */
+	
+	public void setFitness(double fitness) {
+		this.fitness = fitness;
+	}
+	
+	/**
+	  * This method returns a double.
+	  * @return double The time of the parameter.
+	  */
+	
+	public double getTime() {
+		return time;
+	}
+
+	/**
+	  * This method set a new value for time.
+	  * @param double The new time for this parameter.
+	  */
+	
+	public void setTime(double time) {
+		this.time = time;
+	}
+	
+	/**
+	  * This method returns a Chromosome.
+	  * @return Chromosome The finalGene of the parameter.
+	  */
+	
+	public Chromosome getFinalGene() {
+		return finalGene;
+	}
+	
+	/**
+	  * This method set a new value for finalGene.
+	  * @param Chromosome The new finalGene for this parameter.
+	  */
+	
+	public void setFinalGene(Chromosome finalGene) {
+		this.finalGene = finalGene;
+	}
+	
+	/**
+	  * This method set a new value for migrationTax.
+	  * @param int The new migrationTax for this parameter.
+	  */
+	
+	public void setMigrationTax(int migrationTax) {
+		this.migrationTax = migrationTax;
+	}
+	
+	/**
+	  * This method returns a float.
+	  * @return float The expectedFitness of the parameter.
+	  */
+	
+	public float getExpectedFitness() {
+		return expectedFitness;
+	}
+	
+	/**
+	  * This method set a new value for expectedFitness.
+	  * @param float The new expectedFitness for this parameter.
+	  */
+	
+	public void setExpectedFitness(float expectedFitness) {
+		this.expectedFitness = expectedFitness;
+	}
+	
+	/**
 	 * This method generate a list of tests.
 	 * @return ArrayList<Parameter>
 	 */
@@ -420,6 +525,7 @@ public class Parameter implements Comparable, Serializable {
 		int[] elitismRate = {5,10,15};
 		int[] crossoverRate = {85,50,25};
 		double[] mutationRate = {0.5,1.0,5.0};
+		SelectionType[] selectionTypes = {SelectionType.RM, SelectionType.ARM};
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		
 		for(int i = 0; i < number_iterations.length; i++){
@@ -434,8 +540,12 @@ public class Parameter implements Comparable, Serializable {
 							int cross = crossoverRate[v];
 							for(int b = 0; b < mutationRate.length; b++){
 								float mutation = (float) mutationRate[b];
-								Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10, new float[]{0,0,0,0});
-								parameters.add(p2);
+								for(int x = 0; x < selectionTypes.length; x++){
+									SelectionType sel = selectionTypes[x];
+									Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10, new float[]{0,0,0,0}, sel);
+									parameters.add(p2);
+								}
+								
 							}
 						}
 					}
@@ -461,7 +571,8 @@ public class Parameter implements Comparable, Serializable {
 		int[] migrationRate = {10,20,40};
 		int[] migrationTax = {10,20,40};
 		int[] numberOfPopulations = {2,4,8,16};
-		
+		SelectionType[] selectionTypes = {SelectionType.RM, SelectionType.ARM};
+
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		
 		for(int i = 0; i < number_iterations.length; i++){
@@ -482,9 +593,12 @@ public class Parameter implements Comparable, Serializable {
 										int migrationT = migrationTax[q];
 										for(int l = 0; l < numberOfPopulations.length; l++){
 											int numberP = numberOfPopulations[l];
-											Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
-													migrationR, migrationT, numberP, new float[]{0,0,0,0});
-											parameters.add(p2);
+											for(int x = 0; x < selectionTypes.length; x++){
+												SelectionType sel = selectionTypes[x];
+												Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
+														migrationR, migrationT, numberP, new float[]{0,0,0,0}, sel);
+												parameters.add(p2);
+											}
 										}
 									}
 								}
@@ -499,28 +613,25 @@ public class Parameter implements Comparable, Serializable {
 		return parameters;
 	}
 	
-	public float[] getFixed_genes() {
-		return fixed_genes;
+	public static Parameter generateTestWithChromosome(ModelPopulationType model, int number_iterations, int size_of_population, 
+			int stopCondition, int elitismRate, int crossoverRate, float mutationRate, int migrationRate, int migrationTax, 
+			int numberOfPopulations, SelectionType sel, float[] fixed_genes, float expectedFitness){
+		Parameter par = new Parameter(ModelPopulationType.RM, number_iterations, stopCondition, size_of_population, elitismRate, crossoverRate,
+				CrossoverType.P, mutationRate, 10, migrationRate, migrationTax, numberOfPopulations, fixed_genes, sel);
+		par.setExpectedFitness(expectedFitness);
+		return par;
 	}
-
-	public void setFixed_genes(float[] fixed_genes) {
-		this.fixed_genes = fixed_genes;
-	}
-
-	public double getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(double fitness) {
-		this.fitness = fitness;
-	}
-
-	public double getTime() {
-		return time;
-	}
-
-	public void setTime(double time) {
-		this.time = time;
+	
+	@Override
+	public String toString() {
+		return "Parameter [modelPopulation=" + modelPopulation + ", sizeOfPopulation=" + sizeOfPopulation
+				+ ", elitismRate=" + elitismRate + ", selection=" + selection + ", crossoverRate=" + crossoverRate
+				+ ", crossoverType=" + crossoverType + ", mutationRate=" + mutationRate + ", mutationStep="
+				+ mutationStep + ", stopCondition=" + stopCondition + ", maximumIterations=" + maximumIterations
+				+ ", nGenerations=" + nGenerations + ", migrationRate=" + migrationRate + ", migrationTax="
+				+ migrationTax + ", numberOfPopulations=" + numberOfPopulations + ", nSlaves=" + nSlaves + ", fitness="
+				+ fitness + ", time=" + time + ", expectedFitness=" + expectedFitness + ", fixed_genes="
+				+ Arrays.toString(fixed_genes) + "]";
 	}
 
 	@Override
@@ -530,17 +641,5 @@ public class Parameter implements Comparable, Serializable {
 		double compareFitness = p.getFitness();
 		
 		return (int) (this.fitness - compareFitness);
-	}
-
-	public Chromosome getFinalGene() {
-		return finalGene;
-	}
-
-	public void setFinalGene(Chromosome finalGene) {
-		this.finalGene = finalGene;
-	}
-
-	public void setMigrationTax(int migrationTax) {
-		this.migrationTax = migrationTax;
 	}
 }

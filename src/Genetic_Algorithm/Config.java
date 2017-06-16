@@ -34,9 +34,9 @@ public class Config implements Serializable {
 		this.n_h = n_h;
 		this.n = n;
 		this.tax = tax;
-		PIS = PIS;
-		COFINS = COFINS;
-		ICMS = ICMS;
+		this.PIS = PIS;
+		this.COFINS = COFINS;
+		this.ICMS = ICMS;
 		
 		float a = (float) (0.01 * tax * Math.pow((1 + 0.01 * this.tax),n));
 		float b = (float) (Math.pow(1 + 0.1 * tax, n) -1);

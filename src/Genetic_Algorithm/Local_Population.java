@@ -47,7 +47,7 @@ public class Local_Population extends Population implements Runnable{
 	public void generatePopulation(boolean first_time){
 		if(first_time == true){
 			for(int i = 0; i < this.size; i++){
-				population.add(this.create_chromosome());
+				population.add(this.create_chromosome(i));
 				if(population.get(i).getFitness() > this.bigger_fitness){
 					this.bigger_fitness = population.get(i).getFitness();
 				}
@@ -55,8 +55,8 @@ public class Local_Population extends Population implements Runnable{
 		}else{
 			// Regenerate the population.
 			// Apply elitism.
-			float proportion = ((float) elitism_rate) / ((float) size);
-			proportion = proportion * 100;
+			float proportion = ((float) elitism_rate) / 100;
+			proportion = size * proportion;
 			
 			// Select parents to elitism.
 			selectParents(population, SelectionType.RM, (int) proportion);
@@ -64,20 +64,26 @@ public class Local_Population extends Population implements Runnable{
 			ArrayList<Chromosome> new_population = new ArrayList<Chromosome>();
 			new_population = this.parents;
 			
+			// Rewrite all the parents ordering it.
 			selectParents(population, SelectionType.RM, population.size());
 			
+			// Prepare parents for crossover.
 			ArrayList<Chromosome> cross_population = this.parents;
 			
-			for(int i = 0; i < proportion; i++){
+			// Remove the parents already selected by elitism.
+			for(int i = 0; i < proportion - 1; i++){
 				if(i >= cross_population.size()){
 					break;
 				}
 				cross_population.remove(i);
 			}
 			
+			// Populate the rest of population by selection + crossover + mutation.
 			
 			// Apply crossover and get the rest applying mutation if need.
 			selectParents(cross_population, parameters.getSelection(), size - (int) proportion);
+			
+			// TODO: Get 10% of parents to crossover, 10% from elitism and 80% random.
 			
 			for(int i = 0; i < parents.size() - 1; i = i+2){
 				Chromosome c1 = parents.get(i);
@@ -85,25 +91,27 @@ public class Local_Population extends Population implements Runnable{
 				
 				ArrayList<Chromosome> c3 = crossover(c1, c2, parameters.getCrossoverType());
 				
-				// Apply mutation if drawn.
-				Random random = new Random();
-				int r = random.nextInt(100) + 0;
-				
-				if(r < parameters.getMutationRate()){
-					c3.get(0).mutate();
-				}
-				
-				r = random.nextInt(100) + 0;
-				
-				if(r < parameters.getMutationRate()){
-					c3.get(1).mutate();
-				}
-				
 				new_population.add(c3.get(0));
 				new_population.add(c3.get(1));
 			}
 						
 			population = new_population;
+			
+			// Apply mutation.
+			for(int i = 0; i < population.size(); i++){
+				Chromosome c1 = population.get(i);
+				
+				// Apply mutation if drawn.
+				Random random = new Random();
+				int r = random.nextInt(100) + 0;
+				
+				if(r < parameters.getMutationRate()){
+					c1.mutate();
+					//System.out.println("MUTATE");
+				}
+				
+				
+			}
 		}
 	}
 	

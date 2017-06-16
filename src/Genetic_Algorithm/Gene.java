@@ -179,7 +179,7 @@ public class Gene {
 	public void mutate(){
 		if(this.fixedValue == 0){
 			Random random = new Random();
-			int step = 100;
+			int step = 1000;
 			
 			if(mutation == MutationType.SBSD3){
 				step = step / 3;
@@ -198,10 +198,7 @@ public class Gene {
 			
 			float final_value = value + step;
 			
-			// Only change if final value is positive.
-			if(final_value > 0){
-				value = final_value;
-			}
+			value = final_value;
 			
 			// Verify if it is between minimum and maximum allowed.
 			if(value <= min){
