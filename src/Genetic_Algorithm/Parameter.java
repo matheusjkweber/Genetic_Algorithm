@@ -33,6 +33,7 @@ public class Parameter implements Comparable, Serializable {
 	private float expectedFitness;
 	private transient Chromosome finalGene;
 	private transient float[] fixed_genes;
+	private Chromosome expectedChromosome;
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -125,7 +126,7 @@ public class Parameter implements Comparable, Serializable {
 	
 	public Parameter(ModelPopulationType modelPopulation, int numberIterations, int stopCondition, int sizeOfPopulation, 
 			int elitismRate, float crossoverRate, CrossoverType crossoverType, float mutationRate, int mutationStep,
-			double migrationRate, int migrationTax, int numberOfPopulations, float[] fixed_genes, SelectionType selection){
+			double migrationRate, int migrationTax, int numberOfPopulations, float[] fixed_genes, SelectionType selection, Chromosome expectedChromosome){
 		super();
 		this.maximumIterations = numberIterations;
 		this.stopCondition = stopCondition;
@@ -561,17 +562,19 @@ public class Parameter implements Comparable, Serializable {
 	 * @return ArrayList<Parameter>
 	 */
 	
-	public static ArrayList<Parameter> generateRegionalTests(){
-		int[] number_iterations = {100, 1000, 10000};
-		int[] size_of_population = {100, 500};
-		int[] stopCondition = {1,5,10,15};
-		int[] elitismRate = {5,10,15};
-		int[] crossoverRate = {85,50,25};
-		double[] mutationRate = {0.5,1.0,5.0};
-		int[] migrationRate = {10,20,40};
-		int[] migrationTax = {10,20,40};
-		int[] numberOfPopulations = {2,4,8,16};
-		SelectionType[] selectionTypes = {SelectionType.RM, SelectionType.ARM};
+	public static ArrayList<Parameter> generateRegionalTests(ArrayList<Chromosome> expectedChromosomes){
+		// Generate parameters.
+		int[] number_iterations = {100, 500, 600, 700, 800, 900, 1000, 5000, 10000};
+		int[] size_of_population = {100, 200, 300, 400, 500, 1000};
+		int[] stopCondition = {1, 5, 10, 15};
+		int[] elitismRate = {1, 5, 10};
+		int[] crossoverRate = {40, 50, 60, 70};
+		double[] mutationRate = {0.5, 1, 1.5, 3, 5};
+		int[] migrationRate = {5, 10, 15};
+		int[] migrationTax = {5, 10, 15};
+		int[] numberOfPopulations = {2, 4, 8};
+		ModelPopulationType[] modelPopulation = {ModelPopulationType.RM, ModelPopulationType.LM};
+		SelectionType[] selectionTypes = {SelectionType.TM};
 
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		
@@ -594,10 +597,37 @@ public class Parameter implements Comparable, Serializable {
 										for(int l = 0; l < numberOfPopulations.length; l++){
 											int numberP = numberOfPopulations[l];
 											for(int x = 0; x < selectionTypes.length; x++){
-												SelectionType sel = selectionTypes[x];
-												Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
-														migrationR, migrationT, numberP, new float[]{0,0,0,0}, sel);
-												parameters.add(p2);
+												for(int h = 0; h < expectedChromosomes.size(); h++){
+													SelectionType sel = selectionTypes[x];
+													Chromosome c = expectedChromosomes.get(h);
+													float[] genes = {c.getGenes().get(0).getValue(), c.getGenes().get(1).getValue(), c.getGenes().get(2).getValue(), c.getGenes().get(3).getValue()};
+
+													Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
+															migrationR, migrationT, numberP, genes, sel, c);
+													p2.setExpectedFitness(c.getFitness());
+													parameters.add(p2);
+													
+													
+													
+													
+																										
+													
+													/*System.out.println(p2);
+													population = new Regional_Population(p2);
+													
+													// Test with parameters.
+													System.out.println("Comecando...");
+													ArrayList<Chromosome> answers = population.train();
+													Chromosome selected = answers.get(answers.size()-1);
+													
+													double improvement = c.getFitness() - selected.getFitness();
+													
+													double improvementPercent = (improvement * 100) / c.getFitness();
+													
+													System.out.println(improvementPercent+"%");
+													System.out.println(selected);
+													// Write answer in a .csv with expectedChromosome and % of improvement.*/
+												}
 											}
 										}
 									}
@@ -613,15 +643,14 @@ public class Parameter implements Comparable, Serializable {
 		return parameters;
 	}
 	
-	public static Parameter generateTestWithChromosome(ModelPopulationType model, int number_iterations, int size_of_population, 
-			int stopCondition, int elitismRate, int crossoverRate, float mutationRate, int migrationRate, int migrationTax, 
-			int numberOfPopulations, SelectionType sel, float[] fixed_genes, float expectedFitness){
-		Parameter par = new Parameter(ModelPopulationType.RM, number_iterations, stopCondition, size_of_population, elitismRate, crossoverRate,
-				CrossoverType.P, mutationRate, 10, migrationRate, migrationTax, numberOfPopulations, fixed_genes, sel);
-		par.setExpectedFitness(expectedFitness);
-		return par;
+	public Chromosome getExpectedChromosome() {
+		return expectedChromosome;
 	}
-	
+
+	public void setExpectedChromosome(Chromosome expectedChromosome) {
+		this.expectedChromosome = expectedChromosome;
+	}
+
 	@Override
 	public String toString() {
 		return "Parameter [modelPopulation=" + modelPopulation + ", sizeOfPopulation=" + sizeOfPopulation

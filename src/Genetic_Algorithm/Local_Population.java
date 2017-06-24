@@ -1,6 +1,7 @@
 package Genetic_Algorithm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -61,6 +62,7 @@ public class Local_Population extends Population implements Runnable{
 			// Select parents to elitism.
 			selectParents(population, SelectionType.RM, (int) proportion);
 			
+			
 			ArrayList<Chromosome> new_population = new ArrayList<Chromosome>();
 			new_population = this.parents;
 			
@@ -82,8 +84,12 @@ public class Local_Population extends Population implements Runnable{
 			
 			// Apply crossover and get the rest applying mutation if need.
 			selectParents(cross_population, parameters.getSelection(), size - (int) proportion);
-			
-			// TODO: Get 10% of parents to crossover, 10% from elitism and 80% random.
+			/*Get 10% of parents to crossover, 10% from elitism and 80% random.
+			this.generateRandomWithoutRepeat(100, 2000);
+			int added = (int) (proportion + (size / 10));
+			for(int i = added, j = 0; i < this.size; i++, j++){
+				new_population.add(this.create_chromosome(j));
+			}*/
 			
 			for(int i = 0; i < parents.size() - 1; i = i+2){
 				Chromosome c1 = parents.get(i);
@@ -96,19 +102,21 @@ public class Local_Population extends Population implements Runnable{
 			}
 						
 			population = new_population;
-			
+			//Collections.sort(population);
 			// Apply mutation.
 			for(int i = 0; i < population.size(); i++){
 				Chromosome c1 = population.get(i);
 				
 				// Apply mutation if drawn.
 				Random random = new Random();
-				int r = random.nextInt(100) + 0;
-				
-				if(r < parameters.getMutationRate()){
-					c1.mutate();
-					//System.out.println("MUTATE");
+				for(int z = 0; z < c1.getGenes().size(); z++){
+					int r = random.nextInt(100) + 0;
+					
+					if(r < parameters.getMutationRate()){
+						c1.mutate(z);
+					}
 				}
+				
 				
 				
 			}

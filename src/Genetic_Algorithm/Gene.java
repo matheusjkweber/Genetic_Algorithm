@@ -179,35 +179,8 @@ public class Gene {
 	public void mutate(){
 		if(this.fixedValue == 0){
 			Random random = new Random();
-			int step = 1000;
-			
-			if(mutation == MutationType.SBSD3){
-				step = step / 3;
-			}
-			
-			// Random the step.
-			int r1 = random.nextInt(step) + 1;
-			step = r1;
-			
-			int r = random.nextInt(2) + 1;
-			
-			// Random if is positive or negative.
-			if(r == 1){
-				step = step * -1;
-			}
-			
-			float final_value = value + step;
-			
-			value = final_value;
-			
-			// Verify if it is between minimum and maximum allowed.
-			if(value <= min){
-				value = min;
-			}
-			
-			if(value >= max){
-				value = max;
-			}
+			int r1 = random.nextInt(this.max) + this.min;
+			value = r1;
 		}
 	}
 	

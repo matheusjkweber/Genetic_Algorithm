@@ -94,7 +94,7 @@ public class Chromosome implements Comparable {
 		
 		Config config = Genetic_Algorithm.config;
 		
-		float weight = (float) ((3.14 * d.getValue()/1000) * config.getP_mass());
+		float weight = (float) ((3.1415 * d.getValue()/1000) * config.getP_mass());
 		float speed = (float) ((q.getValue()/1000 * 4)/(3.1415*(Math.pow(d.getValue()/1000, 2))));
 		float fixed_cost = weight * l.getValue() * config.getP4(); 
 		float anual_fixed_cost = fixed_cost * config.getFRC();
@@ -127,10 +127,8 @@ public class Chromosome implements Comparable {
 	 * @step The step that mutation will happen.
 	 */
 	
-	public void mutate(){
-		for(int i = 0; i < genes.size(); i++){
-			genes.get(i).mutate();
-		}
+	public void mutate(int gene){
+		genes.get(gene).mutate();
 	}
 
 	@Override

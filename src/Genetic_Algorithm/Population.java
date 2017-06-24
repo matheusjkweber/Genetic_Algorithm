@@ -21,7 +21,6 @@ public abstract class Population {
 	protected Parameter parameters;
 	protected Chromosome last_selected;
 	protected int maximum_iterations;
-	protected Integer[] randomNumbers;
 	//TODO: Create fixed values.
 	
 	/**
@@ -37,7 +36,6 @@ public abstract class Population {
 		this.parameters = parameters;
 		this.bigger_fitness = 0;
 		this.maximum_iterations = parameters.getMaximumIterations();
-		this.randomNumbers = this.generateRandomWithoutRepeat(100, 2000);
 	}
 	
 	/**
@@ -214,7 +212,7 @@ public abstract class Population {
 	public Chromosome create_chromosome(int position){
 		Random random = new Random();		
 		
-		Gene d = new Gene("Diameter", randomNumbers[position], true, MutationType.SBS, 100, 1500, parameters.getFixed_genes()[0]);
+		Gene d = new Gene("Diameter", random.nextInt(2000) + 100, true, MutationType.SBS, 100, 1500, parameters.getFixed_genes()[0]);
 		Gene hg = new Gene("Hg", random.nextInt(25) + 1, true, MutationType.SBSD3, 1, 25, parameters.getFixed_genes()[1]);
 		Gene l = new Gene("Lenght", random.nextInt(1000) + 1, true, MutationType.SBS, 1, 1000, parameters.getFixed_genes()[2]);
 		Gene q = new Gene("Flow", random.nextInt(2000) + 50, true, MutationType.SBS, 50, 2000, parameters.getFixed_genes()[3]);
@@ -246,7 +244,7 @@ public abstract class Population {
 		genes.add(q);
 		
 		Chromosome chromosome = new Chromosome(genes);
-				
+			
 		return chromosome;
 	}
 	
@@ -340,14 +338,20 @@ public abstract class Population {
 				}
 				return tournamentSelection(final_selection, number);
 			}else{
-				// Get chromosomes_selected_per_serie * number_of_series to return the number of chromosomes selected.
-				// Example: number = 900, number_of_series = 40, chromossomes_per_serie = 25, will get 22 per serie.
-				int chromosomes_selected_per_serie = number / number_of_series;
-				for(int z = 0; z < number_of_series; z++){
-					for(int v = 0; v < chromosomes_selected_per_serie - 1; v++){
-						final_selection.add(tournament.get(z).get(v));
+				do{
+					int z = 0;
+					for(int i = 0; i < number_of_series; i++){
+						final_selection.add(tournament.get(i).get(z));
+						if(final_selection.size() == number){
+							break;
+						}
 					}
-				}
+					z++;
+					
+					if(z == chromossomes_per_serie){
+						z = 0;
+					}
+				} while(final_selection.size() < number);
 				return final_selection;
 			}
 		}
@@ -492,22 +496,6 @@ public abstract class Population {
 	
 	public ArrayList<Chromosome> train(){
 		return null;
-	}
-	
-	public Integer[] generateRandomWithoutRepeat(int min, int max){
-		Integer[] arr = new Integer[max - min];
-		for (int i = 0; i < arr.length; i++) {
-	        
-	        if(i > max){
-	        	Random random = new Random();		
-	    		arr[i] = random.nextInt(max) + min;
-	        }else{
-	        	arr[i] = i;
-	        }
-	    }
-		
-		Collections.shuffle(Arrays.asList(arr));
-		return arr;
 	}
 }
 

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -57,15 +58,15 @@ public class Genetic_Algorithm implements Runnable{
 	public void train(int max_tests){
 		isCalculus = false;
 		parameters = Parameter.generateLocalTests();
-		parameters1 = Parameter.generateRegionalTests();
+		//parameters1 = Parameter.generateRegionalTests();
 		
 		
-		int count = parameters.size() + parameters1.size();
+		//int count = parameters.size() + parameters1.size();
 		
 		use_max = true;
 		
 		if(max_tests == 0){
-			max_tests = count;
+			//max_tests = count;
 			use_max = false;
 		}
 		
@@ -254,68 +255,81 @@ public class Genetic_Algorithm implements Runnable{
 	private static void trainFromSheet(){
 		Genetic_Algorithm.config = new Config();
 		ArrayList<Chromosome> expectedChromosomes = getChromosomesFromEntry();
+		ArrayList<Parameter> parameters = Parameter.generateRegionalTests(expectedChromosomes);
 		
-		// Generate parameters.
-		int[] number_iterations = {1000, 5000};
-		int[] size_of_population = {1000, 5000, 10000};
-		int[] stopCondition = {90, 50, 10};
-		int[] elitismRate = {10};
-		int[] crossoverRate = {0};
-		double[] mutationRate = {40};
-		int[] migrationRate = {10};
-		int[] migrationTax = {10};
-		int[] numberOfPopulations = {4,8,16};
-		SelectionType[] selectionTypes = {SelectionType.TM};
-		
+		System.out.println(parameters.size());
 		Population population;
 		
-		for(int i = 0; i < number_iterations.length; i++){
-			int number = number_iterations[i];
-			for(int j = 0; j < size_of_population.length; j++){
-				int size = size_of_population[j];
-				for(int z = 0; z < stopCondition.length; z++){
-					int stop = stopCondition[z];
-					for(int p = 0; p < elitismRate.length; p++){
-						int elitism = elitismRate[p];
-						for(int v = 0; v < crossoverRate.length; v++){
-							int cross = crossoverRate[v];
-							for(int b = 0; b < mutationRate.length; b++){
-								float mutation = (float) mutationRate[b];
-								for(int a = 0; a < migrationRate.length; a++){
-									int migrationR = migrationRate[a];
-									for(int q = 0; q < migrationTax.length;q++){
-										int migrationT = migrationTax[q];
-										for(int l = 0; l < numberOfPopulations.length; l++){
-											int numberP = numberOfPopulations[l];
-											for(int x = 0; x < selectionTypes.length; x++){
-												for(int h = 0; h < expectedChromosomes.size(); h++){
-													SelectionType sel = selectionTypes[x];
-													Chromosome c = expectedChromosomes.get(h);
-													float[] genes = {c.getGenes().get(0).getValue(), c.getGenes().get(1).getValue(), c.getGenes().get(2).getValue(), c.getGenes().get(3).getValue()};
-													Parameter p2 = new Parameter(ModelPopulationType.RM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10,
-															migrationR, migrationT, numberP, genes, sel);
-													System.out.println(p2);
-													population = new Local_Population(p2);
-													
-													// Test with parameters.
-													System.out.println("Comecando...");
-													ArrayList<Chromosome> answers = population.train();
-													Chromosome selected = answers.get(answers.size()-1);
-													System.out.println(selected);
-													// Write answer in a .csv with expectedChromosome and % of improvement.
-												}
-											}
-										}
-									}
-								}
-								
-							}
-						}
-					}
-				}
-			}
-		}
+		boolean first_regional = true;
+		boolean first_local = true;
 		
+		for(int i = 447373; i < parameters.size(); i++){
+			String separator = ",";
+			StringBuilder sb = new StringBuilder();
+			FileWriter pw = null;
+			
+			try {
+				pw = new FileWriter("tests.csv", true);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println(i+" of "+parameters.size());
+			Parameter p = parameters.get(i);
+			long startTime = System.currentTimeMillis(); 
+			
+			if(parameters.get(i).getModelPopulation() == ModelPopulationType.RM){
+				if(first_regional == true){
+					sb.append("Number"+separator+"Number of iterations"+separator+"Stop Condition"+separator+"Size of Population"+separator+"Elitism Rate"+separator+"Crossover Rate"+separator+"Crossover Type"+separator+"Mutation Rate"+separator+"Mutation Step"+separator+"Migration Rate"+separator+"Migration Tax"+separator+"Number of Population"+separator+"D"+separator+"Hg"+separator+"L"+separator+"Q"+separator+"Final Fitness"+separator+"Expected Fitness"+separator+"Improvement"+separator+"Time"+"\n");
+					first_regional = false;
+				}
+				population = new Regional_Population(parameters.get(i));
+			}else{
+				if(first_local == true){
+					sb.append("Number"+separator+"Number of iterations"+separator+"Stop Condition"+separator+"Size of Population"+separator+"Elitism Rate"+separator+"Crossover Rate"+separator+"Crossover Type"+separator+"Mutation Rate"+separator+"Mutation Step"+separator+"D"+separator+"Hg"+separator+"L"+separator+"Q"+separator+"Final Fitness"+separator+"Expected Fitness"+"Improvement"+"Time"+"\n");
+					first_local = false;
+				}
+				population = new Local_Population(parameters.get(i));
+			}
+			
+			ArrayList<Chromosome> answers = population.train();
+			Chromosome selected = answers.get(answers.size()-1);
+			
+			double improvement = parameters.get(i).getExpectedFitness() - selected.getFitness();
+			
+			double improvementPercent = (improvement * 100) / parameters.get(i).getExpectedFitness();
+			
+			if(parameters.get(i).getModelPopulation() == ModelPopulationType.RM){
+				sb.append(i+separator+p.getMaximumIterations()+""+separator+""+p.getStopCondition()+""+separator+""+p.getSizeOfPopulation()+""+separator+""+p.getElitismRate()+""+separator+""
+						+p.getCrossoverRate()+""+separator+"P"+separator+""+p.getMutationRate()+""+separator+"10"+separator+""+p.getMigrationRate()+""+separator+""+p.getMigrationTax()+""+separator+""+p.getNumberOfPopulations()+""+separator+""
+						+selected.getGenes().get(0).getValue()+""+separator+""+selected.getGenes().get(1).getValue()+
+						""+separator+""+selected.getGenes().get(2).getValue()+""+separator+""+selected.getGenes().get(3).getValue()+""+separator+""+selected.getFitness()+separator+p.getExpectedFitness()+separator+improvementPercent+"%");
+			}else{
+				sb.append(i+separator+p.getMaximumIterations()+""+separator+""+p.getStopCondition()+""+separator+""+p.getSizeOfPopulation()+""+separator+""+p.getElitismRate()+""+separator+""
+						+p.getCrossoverRate()+""+separator+"P"+separator+""+p.getMutationRate()+""+separator+"10"+separator+""+selected.getGenes().get(0).getValue()+""+separator+""+selected.getGenes().get(1).getValue()+
+						""+separator+""+selected.getGenes().get(2).getValue()+""+separator+""+selected.getGenes().get(3).getValue()+""+separator+""+selected.getFitness()+separator+p.getExpectedFitness()+separator+improvementPercent+"%");
+						
+			}
+			
+			long endTime = System.currentTimeMillis() - startTime;
+			
+			p.setTime(endTime);
+			sb.append(separator+endTime+"\n");
+			
+			try {
+				pw.write(sb.toString());
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//System.out.println(improvementPercent+"%");
+			//System.out.println(selected);
+		}
 		
 		
 	}
