@@ -564,14 +564,15 @@ public class Parameter implements Comparable, Serializable {
 	
 	public static ArrayList<Parameter> generateRegionalTests(ArrayList<Chromosome> expectedChromosomes){
 		// Generate parameters.
-		int[] number_iterations = {100, 500, 600, 700, 800, 900, 1000, 5000, 10000};
-		int[] size_of_population = {100, 200, 300, 400, 500, 1000};
-		int[] stopCondition = {1, 5, 10, 15};
-		int[] elitismRate = {1, 5, 10};
+		//int[] number_iterations = {100, 500, 600, 700, 800, 900, 1000, 5000, 10000};
+		int[] number_iterations = {100, 500, 750, 1000, 5000, 10000};
+		int[] size_of_population = {100, 250, 500, 1000};
+		int[] stopCondition = {1, 5, 15};
+		int[] elitismRate = {1, 10};
 		int[] crossoverRate = {40, 50, 60, 70};
-		double[] mutationRate = {0.5, 1, 1.5, 3, 5};
-		int[] migrationRate = {5, 10, 15};
-		int[] migrationTax = {5, 10, 15};
+		double[] mutationRate = {0.5, 1, 2, 5};
+		int[] migrationRate = {5, 15};
+		int[] migrationTax = {5, 15};
 		int[] numberOfPopulations = {2, 4, 8};
 		ModelPopulationType[] modelPopulation = {ModelPopulationType.RM, ModelPopulationType.LM};
 		SelectionType[] selectionTypes = {SelectionType.TM};
@@ -633,6 +634,59 @@ public class Parameter implements Comparable, Serializable {
 									}
 								}
 								
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return parameters;
+	}
+	
+	/**
+	 * This method generate a list of tests.
+	 * @return ArrayList<Parameter>
+	 */
+	
+	public static ArrayList<Parameter> generateLocalTests(ArrayList<Chromosome> expectedChromosomes){
+		// Generate parameters.
+		int[] number_iterations = {100, 500, 600, 700, 800, 900, 1000, 5000, 10000};
+		int[] size_of_population = {100, 200, 300, 400, 500, 1000};
+		int[] stopCondition = {1, 5, 10, 15};
+		int[] elitismRate = {1, 5, 10};
+		int[] crossoverRate = {40, 50, 60, 70};
+		double[] mutationRate = {0.5, 1, 1.5, 3, 5};
+		int[] migrationRate = {5, 10, 15};
+		int[] migrationTax = {5, 10, 15};
+		int[] numberOfPopulations = {2, 4, 8};
+		ModelPopulationType[] modelPopulation = {ModelPopulationType.RM, ModelPopulationType.LM};
+		SelectionType[] selectionTypes = {SelectionType.TM};
+
+		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		
+		for(int i = 0; i < number_iterations.length; i++){
+			int number = number_iterations[i];
+			for(int j = 0; j < size_of_population.length; j++){
+				int size = size_of_population[j];
+				for(int z = 0; z < stopCondition.length; z++){
+					int stop = stopCondition[z];
+					for(int p = 0; p < elitismRate.length; p++){
+						int elitism = elitismRate[p];
+						for(int v = 0; v < crossoverRate.length; v++){
+							int cross = crossoverRate[v];
+							for(int b = 0; b < mutationRate.length; b++){
+								float mutation = (float) mutationRate[b];
+								for(int x = 0; x < selectionTypes.length; x++){
+									for(int h = 0; h < expectedChromosomes.size(); h++){
+										SelectionType sel = selectionTypes[x];
+										Chromosome c = expectedChromosomes.get(h);
+										float[] genes = {c.getGenes().get(0).getValue(), c.getGenes().get(1).getValue(), c.getGenes().get(2).getValue(), c.getGenes().get(3).getValue()};
+										Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10, new float[]{0,0,0,0}, sel);
+										p2.setExpectedFitness(c.getFitness());
+										parameters.add(p2);
+									}
+								}
 							}
 						}
 					}

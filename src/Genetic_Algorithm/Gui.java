@@ -113,11 +113,11 @@ public class Gui {
 	protected void createContents() {
 		shell = new Shell(SWT.SHELL_TRIM & (~SWT.RESIZE));
 		shell.setSize(1400, 800);
-		shell.setText("");
+		shell.setText("TUBOPT");
 		
 		createFirstTab();
 		
-		createSecondTab();
+		//createSecondTab();
 		
 		createThirdTab();
 	}
@@ -227,7 +227,7 @@ public class Gui {
 	 * Build "Convergencia" group.
 	 */
 	protected void buildConvergencia(ArrayList<Chromosome> answers){
-		Collections.reverse(answers);
+		//Collections.reverse(answers);
 		
 		grpConvergncia = new Group(composite, SWT.NONE);
 		grpConvergncia.setText("Converg\u00EAncia");
@@ -1146,7 +1146,9 @@ public class Gui {
 		
 		Text text = new Text(grpSobre, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		text.setBounds(10, 22, 1354, 188);
-		text.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec nibh ac risus ultrices posuere eget in magna. Proin sodales erat lacinia, eleifend libero vel, ullamcorper risus. Nunc vitae dolor auctor, malesuada nulla in, aliquet mauris. Suspendisse fringilla ut enim vitae efficitur. Vivamus scelerisque purus et dignissim tempor. Integer ornare neque sed justo dictum, eu aliquet ligula fringilla. Vestibulum non purus eget elit lacinia venenatis vitae ac lacus. Phasellus fermentum odio consectetur lacus ornare efficitur. Ut eget ligula odio. Suspendisse potenti. Nam lacinia tortor et dolor aliquam, at convallis lacus convallis.Duis quis iaculis elit, a venenatis tellus. Nunc sit amet odio urna. Donec nec libero vel erat tempus sollicitudin. Cras pretium blandit mauris, a accumsan nisl bibendum vitae. Praesent imperdiet, tellus id tempus ultrices, lectus elit viverra odio, nec tempor dui ante a sem. Vestibulum tincidunt ligula augue, in facilisis eros fringilla quis. Curabitur a tellus vel arcu euismod auctor. Proin massa libero, semper ac erat fringilla, faucibus mollis dolor.");
+		text.setText("Essa ferramenta foi desenvolvida como Trabalho de Conclusão de Curso no curso de Ciência da Computação da Universidade Federal de Pelotas em 2017/1.\n"
+				+ "Autor: Matheus José Krumemauer Weber\n"
+				+ "Orientadores: Prof. Dr. Marilton Sanchonete de Aguiar e Profª. Drª. Luciana Marini Kopp");
 	}
 	
 	/**
@@ -1160,7 +1162,7 @@ public class Gui {
 		
 		Text text = new Text(group, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		text.setBounds(10, 22, 1354, 188);
-		text.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec nibh ac risus ultrices posuere eget in magna. Proin sodales erat lacinia, eleifend libero vel, ullamcorper risus. Nunc vitae dolor auctor, malesuada nulla in, aliquet mauris. Suspendisse fringilla ut enim vitae efficitur. Vivamus scelerisque purus et dignissim tempor. Integer ornare neque sed justo dictum, eu aliquet ligula fringilla. Vestibulum non purus eget elit lacinia venenatis vitae ac lacus. Phasellus fermentum odio consectetur lacus ornare efficitur. Ut eget ligula odio. Suspendisse potenti. Nam lacinia tortor et dolor aliquam, at convallis lacus convallis.Duis quis iaculis elit, a venenatis tellus. Nunc sit amet odio urna. Donec nec libero vel erat tempus sollicitudin. Cras pretium blandit mauris, a accumsan nisl bibendum vitae. Praesent imperdiet, tellus id tempus ultrices, lectus elit viverra odio, nec tempor dui ante a sem. Vestibulum tincidunt ligula augue, in facilisis eros fringilla quis. Curabitur a tellus vel arcu euismod auctor. Proin massa libero, semper ac erat fringilla, faucibus mollis dolor.");
+		text.setText("O objetivo desse trabalho é discutir técnicas baseadas em heurísticas para alcançar uma solução aproximada para o problema em questão, bem como desenvolver uma ferramenta capaz de auxiliar os profissionais em campo assim reduzindo o desperdício de dinheiro e energia.");
 	}
 	
 	/**
@@ -1174,7 +1176,8 @@ public class Gui {
 		
 		Text text = new Text(group_1, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		text.setBounds(10, 22, 1354, 188);
-		text.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec nibh ac risus ultrices posuere eget in magna. Proin sodales erat lacinia, eleifend libero vel, ullamcorper risus. Nunc vitae dolor auctor, malesuada nulla in, aliquet mauris. Suspendisse fringilla ut enim vitae efficitur. Vivamus scelerisque purus et dignissim tempor. Integer ornare neque sed justo dictum, eu aliquet ligula fringilla. Vestibulum non purus eget elit lacinia venenatis vitae ac lacus. Phasellus fermentum odio consectetur lacus ornare efficitur. Ut eget ligula odio. Suspendisse potenti. Nam lacinia tortor et dolor aliquam, at convallis lacus convallis.Duis quis iaculis elit, a venenatis tellus. Nunc sit amet odio urna. Donec nec libero vel erat tempus sollicitudin. Cras pretium blandit mauris, a accumsan nisl bibendum vitae. Praesent imperdiet, tellus id tempus ultrices, lectus elit viverra odio, nec tempor dui ante a sem. Vestibulum tincidunt ligula augue, in facilisis eros fringilla quis. Curabitur a tellus vel arcu euismod auctor. Proin massa libero, semper ac erat fringilla, faucibus mollis dolor.");
+		text.setText("1 - Como calcular o dimensionamento de tubulação? \n"
+				+ "Adicione os valores dos parâmetros fixos no grupo 'Calcular Valores' e aperte em 'Calcular'.");
 	}
 	
 	public void showError(String message){

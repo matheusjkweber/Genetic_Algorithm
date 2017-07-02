@@ -260,13 +260,14 @@ public class Genetic_Algorithm implements Runnable{
 		System.out.println(parameters.size());
 		Population population;
 		
-		boolean first_regional = true;
-		boolean first_local = true;
+		boolean first_regional = false;
+		boolean first_local = false;
 		
-		for(int i = 447373; i < parameters.size(); i++){
+		for(int i = 34225; i < parameters.size(); i++){
 			String separator = ",";
 			StringBuilder sb = new StringBuilder();
 			FileWriter pw = null;
+			System.out.println(i+" of "+parameters.size());
 			
 			try {
 				pw = new FileWriter("tests.csv", true);
@@ -278,7 +279,6 @@ public class Genetic_Algorithm implements Runnable{
 				e.printStackTrace();
 			}
 			
-			System.out.println(i+" of "+parameters.size());
 			Parameter p = parameters.get(i);
 			long startTime = System.currentTimeMillis(); 
 			

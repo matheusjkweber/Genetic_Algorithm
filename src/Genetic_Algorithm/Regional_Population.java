@@ -27,8 +27,8 @@ public class Regional_Population extends Population{
 		// Create the set of subpopulations.
 		for(int i = 0; i < number_of_populations; i++){
 			// Number_max_iterations of population will be based on migatrion rate.
-			int number = (int) (100 - migration_rate);
-			this.parameters.setMaximumIterations(number);
+			//int number = (int) (100 - migration_rate);
+			//this.parameters.setMaximumIterations(number);
 			
 			population.add(new Local_Population(parameters));
 		}
