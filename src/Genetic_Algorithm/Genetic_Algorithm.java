@@ -53,6 +53,8 @@ public class Genetic_Algorithm implements Runnable{
 		this.gui = gui;
 		this.max_tests = 0;
 		this.finish = false;
+		//best_local = Parameter.generateLocalTests();
+		//bests = Parameter.generateLocalTests();
 	}
 	
 	public void train(int max_tests){
@@ -255,22 +257,97 @@ public class Genetic_Algorithm implements Runnable{
 	private static void trainFromSheet(){
 		Genetic_Algorithm.config = new Config();
 		ArrayList<Chromosome> expectedChromosomes = getChromosomesFromEntry();
-		ArrayList<Parameter> parameters = Parameter.generateRegionalTests(expectedChromosomes);
+		ArrayList<Parameter> parameters = Parameter.generateParameter(expectedChromosomes);
 		
 		System.out.println(parameters.size());
 		Population population;
 		
-		boolean first_regional = false;
-		boolean first_local = false;
+		for(int j = 0; j < 30; j++){
+			boolean first_regional = true;
+			boolean first_local = true;
+			for(int i = 0; i < parameters.size(); i++){
+				String separator = ",";
+				StringBuilder sb = new StringBuilder();
+				FileWriter pw = null;
+				System.out.println(i+" of "+parameters.size());
+				
+				try {
+					pw = new FileWriter("tests_campo_sem_vazao/tests_"+j+".csv", true);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				Parameter p = parameters.get(i);
+				long startTime = System.nanoTime(); 
+				
+				if(parameters.get(i).getModelPopulation() == ModelPopulationType.RM){
+					if(first_regional == true){
+						sb.append("Number"+separator+"Number of iterations"+separator+"Stop Condition"+separator+"Size of Population"+separator+"Elitism Rate"+separator+"Crossover Rate"+separator+"Crossover Type"+separator+"Mutation Rate"+separator+"Mutation Step"+separator+"Migration Rate"+separator+"Migration Tax"+separator+"Number of Population"+separator+"D"+separator+"Hg"+separator+"L"+separator+"Q"+separator+"Final Fitness"+separator+"Expected Fitness"+separator+"Improvement"+separator+"Time"+"\n");
+						first_regional = false;
+					}
+					population = new Regional_Population(parameters.get(i));
+				}else{
+					if(first_local == true){
+						sb.append("Number"+separator+"Number of iterations"+separator+"Stop Condition"+separator+"Size of Population"+separator+"Elitism Rate"+separator+"Crossover Rate"+separator+"Crossover Type"+separator+"Mutation Rate"+separator+"Mutation Step"+separator+"D"+separator+"Hg"+separator+"L"+separator+"Q"+separator+"Final Fitness"+separator+"Expected Fitness"+"Improvement"+"Time"+"\n");
+						first_local = false;
+					}
+					population = new Local_Population(parameters.get(i));
+				}
+				
+				ArrayList<Chromosome> answers = population.train();
+				Chromosome selected = answers.get(answers.size()-1);
+				
+				double improvement = parameters.get(i).getExpectedFitness() - selected.getFitness();
+				
+				double improvementPercent = (improvement * 100) / parameters.get(i).getExpectedFitness();
+				
+				if(parameters.get(i).getModelPopulation() == ModelPopulationType.RM){
+					sb.append(i+separator+p.getMaximumIterations()+""+separator+""+p.getStopCondition()+""+separator+""+p.getSizeOfPopulation()+""+separator+""+p.getElitismRate()+""+separator+""
+							+p.getCrossoverRate()+""+separator+"P"+separator+""+p.getMutationRate()+""+separator+"10"+separator+""+p.getMigrationRate()+""+separator+""+p.getMigrationTax()+""+separator+""+p.getNumberOfPopulations()+""+separator+""
+							+selected.getGenes().get(0).getValue()+""+separator+""+selected.getGenes().get(1).getValue()+
+							""+separator+""+selected.getGenes().get(2).getValue()+""+separator+""+selected.getGenes().get(3).getValue()+""+separator+""+selected.getFitness()+separator+p.getExpectedFitness()+separator+improvementPercent+"%");
+				}else{
+					sb.append(i+separator+p.getMaximumIterations()+""+separator+""+p.getStopCondition()+""+separator+""+p.getSizeOfPopulation()+""+separator+""+p.getElitismRate()+""+separator+""
+							+p.getCrossoverRate()+""+separator+"P"+separator+""+p.getMutationRate()+""+separator+"10"+separator+""+selected.getGenes().get(0).getValue()+""+separator+""+selected.getGenes().get(1).getValue()+
+							""+separator+""+selected.getGenes().get(2).getValue()+""+separator+""+selected.getGenes().get(3).getValue()+""+separator+""+selected.getFitness()+separator+p.getExpectedFitness()+separator+improvementPercent+"%");
+							
+				}
+				
+				long endTime = (long) ((System.nanoTime() - startTime));
+				
+				p.setTime(endTime);
+				sb.append(separator+endTime+"\n");
+				
+				try {
+					pw.write(sb.toString());
+					pw.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//System.out.println(improvementPercent+"%");
+				//System.out.println(selected);
+			}
+		}
+	
 		
-		for(int i = 34225; i < parameters.size(); i++){
+		// For parameters
+	
+		/*
+		  boolean first_regional = false;
+		boolean first_local = false;
+		  for(int i = 0; i < parameters.size(); i++){
 			String separator = ",";
 			StringBuilder sb = new StringBuilder();
 			FileWriter pw = null;
 			System.out.println(i+" of "+parameters.size());
 			
 			try {
-				pw = new FileWriter("tests.csv", true);
+				pw = new FileWriter("tests/tests.csv", true);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -280,7 +357,7 @@ public class Genetic_Algorithm implements Runnable{
 			}
 			
 			Parameter p = parameters.get(i);
-			long startTime = System.currentTimeMillis(); 
+			long startTime = System.nanoTime(); 
 			
 			if(parameters.get(i).getModelPopulation() == ModelPopulationType.RM){
 				if(first_regional == true){
@@ -315,7 +392,7 @@ public class Genetic_Algorithm implements Runnable{
 						
 			}
 			
-			long endTime = System.currentTimeMillis() - startTime;
+			long endTime = (long) ((System.nanoTime() - startTime));
 			
 			p.setTime(endTime);
 			sb.append(separator+endTime+"\n");
@@ -329,7 +406,7 @@ public class Genetic_Algorithm implements Runnable{
 			}
 			//System.out.println(improvementPercent+"%");
 			//System.out.println(selected);
-		}
+		}*/
 		
 		
 	}
@@ -422,7 +499,7 @@ public class Genetic_Algorithm implements Runnable{
 	 * Main used for tests.
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		trainFromSheet();
-	}
+	}*/
 }

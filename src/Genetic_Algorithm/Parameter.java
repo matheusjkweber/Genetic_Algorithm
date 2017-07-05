@@ -520,13 +520,13 @@ public class Parameter implements Comparable, Serializable {
 	 */
 	
 	public static ArrayList<Parameter> generateLocalTests(){
-		int[] number_iterations = {100, 1000, 10000};
-		int[] size_of_population = {100, 500};
-		int[] stopCondition = {1,5,10,15};
-		int[] elitismRate = {5,10,15};
-		int[] crossoverRate = {85,50,25};
-		double[] mutationRate = {0.5,1.0,5.0};
-		SelectionType[] selectionTypes = {SelectionType.RM, SelectionType.ARM};
+		int[] number_iterations = {100};
+		int[] size_of_population = {100};
+		int[] stopCondition = {1};
+		int[] elitismRate = {10};
+		int[] crossoverRate = {70};
+		double[] mutationRate = {1};
+		SelectionType[] selectionTypes = {SelectionType.TM};
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		
 		for(int i = 0; i < number_iterations.length; i++){
@@ -565,7 +565,7 @@ public class Parameter implements Comparable, Serializable {
 	public static ArrayList<Parameter> generateRegionalTests(ArrayList<Chromosome> expectedChromosomes){
 		// Generate parameters.
 		//int[] number_iterations = {100, 500, 600, 700, 800, 900, 1000, 5000, 10000};
-		int[] number_iterations = {100, 500, 750, 1000, 5000, 10000};
+		int[] number_iterations = {100, 500, 750, 1000};
 		int[] size_of_population = {100, 250, 500, 1000};
 		int[] stopCondition = {1, 5, 15};
 		int[] elitismRate = {1, 10};
@@ -645,6 +645,24 @@ public class Parameter implements Comparable, Serializable {
 	}
 	
 	/**
+	 * This method generate the best parameters.
+	 * @return Parameter
+	 */
+	
+	public static ArrayList<Parameter> generateParameter(ArrayList<Chromosome> expectedChromosomes){
+		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		// Generate parameters.
+		for(int h = 0; h < expectedChromosomes.size(); h++){
+			Chromosome c = expectedChromosomes.get(h);
+			float[] genes = {c.getGenes().get(0).getValue(), c.getGenes().get(1).getValue(), c.getGenes().get(2).getValue(), c.getGenes().get(3).getValue()};
+			Parameter p2 = new Parameter(ModelPopulationType.LM, 100, 1, 100, 10, 70, CrossoverType.P, 1, 10, genes, SelectionType.TM);
+			p2.setExpectedFitness(c.getFitness());
+			parameters.add(p2);
+		}
+		return parameters;
+	}
+	
+	/**
 	 * This method generate a list of tests.
 	 * @return ArrayList<Parameter>
 	 */
@@ -682,7 +700,7 @@ public class Parameter implements Comparable, Serializable {
 										SelectionType sel = selectionTypes[x];
 										Chromosome c = expectedChromosomes.get(h);
 										float[] genes = {c.getGenes().get(0).getValue(), c.getGenes().get(1).getValue(), c.getGenes().get(2).getValue(), c.getGenes().get(3).getValue()};
-										Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10, new float[]{0,0,0,0}, sel);
+										Parameter p2 = new Parameter(ModelPopulationType.LM, number, stop, size, elitism, cross, CrossoverType.P, mutation, 10, genes, sel);
 										p2.setExpectedFitness(c.getFitness());
 										parameters.add(p2);
 									}

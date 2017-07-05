@@ -82,14 +82,14 @@ public class Gui {
 	
 	//TODO: Uncoment to go back to normal program.
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		try {
 			Gui window = new Gui();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 
 	/**
 	 * Open the window.
@@ -370,8 +370,6 @@ public class Gui {
 					
 					float[] fixed_genes = {diameter, flow, geometricHeight, length};
 					best.setFixed_genes(fixed_genes);
-					best.setMaximumIterations(100000);
-					best.setStopCondition(95);
 					genetic.calculate(best);
 					
 					while(genetic.isFinish() == false){
